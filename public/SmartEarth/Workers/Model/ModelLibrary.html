@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>模型库</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        html,
+        body {
+            background-color: rgba(0, 0, 0, 0);
+            height: 100%;
+            overflow: hidden;
+            color: #000;
+        }
+
+        #ModelLibrary {
+            margin: 0 10px;
+            height: calc(100% - 51px);
+        }
+
+        button {
+            margin: 10px 0 10px 10px;
+        }
+
+        .layui-btn-sm i {
+            font-size: 24px !important;
+        }
+
+        .layui-input-block {
+            margin-left: 0;
+        }
+
+        .layui-form-item {
+            margin-bottom: 0px !important;
+            border-bottom: none;
+        }
+
+        .layui-input {
+            background-color: rgba(0, 0, 0, 0) !important;
+            margin-top: 5px;
+            color: #fff;
+        }
+
+        .active {
+            border: 1px solid #fc0 !important;
+            box-shadow: 0 0 8px #ddd;
+            -moz-box-shadow: 0 0 8px #ddd;
+            -webkit-box-shadow: 0 0 8px #ddd;
+            cursor: pointer;
+        }
+
+        .LibraryHead {
+            position: relative;
+            height: 50px;
+            border-bottom: 1px solid #ffffff;
+        }
+
+        .models {
+            overflow: auto;
+            margin: 5px 0;
+        }
+
+        .models div {
+            display: none;
+        }
+
+        .models li {
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .models img {
+            width: 145px;
+            height: 145px;
+            margin: 8px 8px 0 0;
+            border: 1px solid #D2D2D2;
+        }
+
+        .models img:hover {
+            border: 1px solid #3995f4;
+        }
+
+        .layui-anim::-webkit-scrollbar,
+        .models::-webkit-scrollbar {
+            /*滚动条整体样式*/
+            width: 8px;
+            /*高宽分别对应横竖滚动条的尺寸*/
+            height: 8px;
+            scrollbar-arrow-color: red;
+        }
+
+        .layui-anim::-webkit-scrollbar-thumb,
+        .models::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            -webkit-box-shadow: inset 0 0 5px rgba(218, 218, 218, 0.2);
+            box-shadow: inset 0 0 5px rgba(218, 218, 218, 0.2);
+            background: rgba(218, 218, 218, 0.5);
+            scrollbar-arrow-color: red;
+        }
+
+        .layui-anim::-webkit-scrollbar-track,
+        .models::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 5px rgba(218, 218, 218, 0.2);
+            box-shadow: inset 0 0 5px rgba(218, 218, 218, 0.2);
+            border-radius: 0;
+            background: rgba(218, 218, 218, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="LibraryHead">
+        <button type="button" title="打开" id='open' class="open layui-btn layui-btn-sm">
+            <i class="layui-icon">&#xe67d;</i>
+        </button>
+        <button type="button" title="保存" class="save layui-btn layui-btn-sm layui-btn-normal">
+            <i class="layui-icon">&#xe621;</i>
+        </button>
+        <button type="button" title="是否开启编辑" class="edit layui-btn layui-btn-sm layui-btn-warm">
+            <i class="layui-icon">&#xe673;</i>
+        </button>
+        <button type="button" title="清空" class="delete layui-btn layui-btn-sm layui-btn-danger">
+            <i class="layui-icon">&#xe640;</i>
+        </button>
+    </div>
+    <div id="ModelLibrary">
+        <div class="selectType">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <select name="modelType" id='modelType' lay-filter="modelType">
+
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="models">
+
+        </div>
+    </div>
+    <script src="../layui/layui.js"></script>
+    <script src="../jquery-2.0.3.js"></script>
+    <script>
+        var Viewer = parent.sgworld._Viewer;
+        var sgworld = parent.sgworld;
+        var ModelLibraryURL = 'http://183.162.245.49:8099/ModelLibrary/'
+        var imgRootURL = ModelLibraryURL + 'image/';
+
+        //获取数据
+        $.ajax({
+            url: ModelLibraryURL + 'config.json',
+            type: 'GET',
+            dataType: "json",
+            success: data => {
+                addModelList(data);
+            }
+        });
+
+        //开启编辑并启用属性弹窗
+        let isEdit = true;
+        sgworld.Creator.SimpleGraphic.edit(true, { editProp: true });
+
+        layui.use(['element', 'form', 'slider', 'upload'], function () {
+            window.element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+            window.form = layui.form;
+            window.slider = layui.slider;
+            window.upload = layui.upload;
+
+            var bodyHeight = $('body').height();
+            $('.models').height(bodyHeight - 110);
+            $("#model0").show();
+
+            form.on('select(modelType)', function (data) {
+                $("#model" + data.value).show();
+                $("#model" + data.value).siblings().hide();
+            });
+
+            upload.render({
+                elem: '#open'
+                , accept: 'file' //普通文件
+                , auto: false
+                , choose: function (obj) {
+                    var files = this.files = obj.pushFile();
+                    for (var key in files) {
+                        sgworld.Creator.SimpleGraphic.open(files[key]);
+                        break;
+                    }
+                }
+            });
+
+            $(".save").click(() => {
+                sgworld.Creator.SimpleGraphic.save();
+            });
+
+            $(".edit").click(() => {
+                isEdit = !isEdit;
+                if (isEdit) {
+                    sgworld.Creator.SimpleGraphic.edit(true, { editProp: true });
+                    $(".edit i").html('&#xe673;');
+                } else {
+                    sgworld.Creator.SimpleGraphic.edit(false);
+                    $(".edit i").html('&#xe642;');
+                }
+            });
+
+            $(".delete").click(() => {
+                sgworld.Creator.SimpleGraphic.clear()
+            });
+        });
+        window.ModelEdit=new parent.SmartEarth.ModelEdit(parent.Viewer)
+        function drawModel(type, name, model) {
+            sgworld.Creator.createSimpleGraphic('model', {
+                url: ModelLibraryURL + type + '/' + model,
+                name: name
+            }, entity => {
+                window.abc = entity
+            })
+            // ModelLibrary.drawModel(type, numbering, function (model) {
+            //     model.name = name;
+            //     //添加到属性编辑列表
+            //     sgworld.Creator.SimpleGraphic.SimpleGraphicObj.push(model.id);
+            // })
+        }
+
+        function addModelList(modelList) {
+            var modelsContainer = $(".models");
+            var selectContainer = $('#modelType');
+            modelList.forEach((item, index) => {
+                selectContainer.append(`<option value="${index}">${item.name}(${item.data.length})</option>`);
+                let htmlStr = `<div id="model${index}"><ul>`;
+                item.data.forEach((model, index1) => {
+                    htmlStr += `<li onclick="drawModel('${item.name}','${model.name}','${model.model}')">
+                        <i title="${model.name}">
+                            <img src="${imgRootURL}${model.img}">
+                        </i>
+                    </li>`;
+                });
+                htmlStr += '</ul></div>';
+                modelsContainer.append(htmlStr);
+            });
+
+        }
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+.other-class{
+    border-radius: 5px;
+    background-color:rgba(0, 0, 0, 0.5)!important;
+    border: 1px solid rgba(32,160,255,.6)!important;
+}
+.other-class .layui-layer-title{
+    background: #777;
+    font-weight: bold;
+    color: #fff;
+}
+.other-class .layui-layer-content{
+    background: rgba(0, 0, 0, 0);
+}
+.layui-layer-setwin .layui-layer-close1{
+    background-position: -95px -130px;
+}
+

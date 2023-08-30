@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>属性</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        html,
+        body,
+        #Attribute {
+            background-color: rgba(0, 0, 0, 0);
+            height: 100%;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        .layui-form-item {
+            border: 1px #fff solid;
+            margin-bottom: 0px !important;
+            border-bottom: none;
+        }
+
+        .layui-input {
+            background-color: #fff !important;
+            height: 30px;
+            margin-top: 5px
+        }
+
+        .active {
+            border: 1px solid #fc0 !important;
+            box-shadow: 0 0 8px #ddd;
+            -moz-box-shadow: 0 0 8px #ddd;
+            -webkit-box-shadow: 0 0 8px #ddd;
+            cursor: pointer;
+        }
+
+
+        .layui-form-label {
+            width: 100px !important;
+            padding: 11px 15px !important;
+            border-right: 1px #fff solid;
+            font-weight: bold !important;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .layui-input-block {
+            width: 150px !important;
+            margin-left: 150px !important;
+        }
+
+        .mCSB_container {
+            margin-right: 17px !important;
+        }
+
+        legend {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        .removeGraphic {
+            position: absolute;
+            top: -9px;
+            right: 0;
+        }
+
+        .attrTitle {
+            position: relative;
+        }
+
+        .outline {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="Attribute" style="margin:0 10px;">
+        <div class="attrTitle">
+            <legend>样式信息</legend>
+            <!-- <button type="button" class="layui-btn layui-btn-danger removeGraphic" onclick="removeGraphic()">移除</button> -->
+        </div>
+        <!--贴地线-->
+        <div class="props GroundPolyline" style="display: none">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-block" style="line-height: 38px;">
+                        贴地线
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0" value="贴地线"
+                            class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">线宽</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="width" lay-verify="title" autocomplete="off" placeholder="0"
+                            onkeyup="value=value.replace(/[^\d\.]/g,'')" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="height: 40px;">
+                    <label class="layui-form-label">填充色</label>
+                    <div class="layui-input-block">
+                        <div id="colorchk-GroundPolyline" style="display: inline-block;margin-top: 2px;"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="position:relative;border: 1px #fff solid;">
+                    <label class="layui-form-label">填充透明度</label>
+                    <div class="layui-input-block" style="position: absolute;top: 16px">
+                        <div id="opacity-GroundPolyline" class="demo-slider"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--贴地面-->
+        <div class="props GroundPolygon" style="display: none">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-block" style="line-height: 38px;">
+                        贴地面
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0" value="贴地面"
+                            class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="height: 40px;">
+                    <label class="layui-form-label">填充色</label>
+                    <div class="layui-input-block">
+                        <div id="colorchk-GroundPolygon" style="display: inline-block;margin-top: 2px;"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="position:relative;border: 1px #fff solid;">
+                    <label class="layui-form-label">填充透明度</label>
+                    <div class="layui-input-block" style="position: absolute;top: 16px">
+                        <div id="opacity-GroundPolygon" class="demo-slider"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--拉伸面-->
+        <div class="props ExtrudedPolygon" style="display: none">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-block" style="line-height: 38px;">
+                        拉伸面
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0" value="拉伸面"
+                            class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="height: 40px;">
+                    <label class="layui-form-label">填充色</label>
+                    <div class="layui-input-block">
+                        <div id="colorchk-ExtrudedPolygon" style="display: inline-block;margin-top: 2px;"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="position:relative">
+                    <label class="layui-form-label">填充透明度</label>
+                    <div class="layui-input-block" style="position: absolute;top: 16px">
+                        <div id="opacity-ExtrudedPolygon" class="demo-slider"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">拉伸高度</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="height" lay-verify="title" autocomplete="off" placeholder="0"
+                            onkeyup="value=value.replace(/[^\d\.]/g,'')" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item" style="border: 1px #fff solid;">
+                    <label class="layui-form-label">是否显示边框</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" lay-skin="switch" id="showExtrudedPolygonOutline"
+                            lay-filter="showExtrudedPolygonOutline" title="开关">
+                    </div>
+                </div>
+                <div class="layui-form-item outline" style="height: 40px;border-top: none;">
+                    <label class="layui-form-label">边框色</label>
+                    <div class="layui-input-block">
+                        <div id="colorchk-ExtrudedPolygon2" style="display: inline-block;margin-top: 2px;"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item outline" style="position:relative;border: 1px #fff solid;">
+                    <label class="layui-form-label">边框透明度</label>
+                    <div class="layui-input-block" style="position: absolute;top: 16px">
+                        <div id="opacity-ExtrudedPolygon2" class="demo-slider"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="../layui/layui.js"></script>
+    <script>
+        var Viewer = parent.sgworld._Viewer;
+        var Cesium = parent.Cesium;
+        var PopupData = parent.SmartEarthPopupData;
+        var type = PopupData.propType;
+        var editGraphic = PopupData.editGraphic;
+        !editGraphic && (editGraphic = {});
+        if (editGraphic.graphic && editGraphic.graphic.material && editGraphic.graphic.material.color && editGraphic.graphic.material.color._value) {
+            getFillColor(editGraphic.graphic.material.color._value);
+        } else {
+            editGraphic.fillColor = '#ff0000';
+            editGraphic.alpha = 50;
+        }
+        if (editGraphic.graphic && editGraphic.graphic.outlineColor && editGraphic.graphic.outlineColor._value) {
+            getOutlineColor(editGraphic.graphic.outlineColor._value);
+        } else {
+            editGraphic.outlineColor = '#ff0000';
+            editGraphic.outlineAlpha = 100;
+        }
+        layui.use(['element', 'form', 'slider', 'colorpicker'], function () {
+            window.$ = layui.jquery;
+            window.element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+            window.form = layui.form;
+            window.slider = layui.slider;
+            window.colorpicker = layui.colorpicker;
+
+            $('#Attribute').find("." + type).show();
+
+            switch (type) {
+                case 'ExtrudedPolygon':
+                    ExtrudedPolygonProp();
+                    $('.ExtrudedPolygon input[name="name"]').val(editGraphic.entity.name);
+                    $('.ExtrudedPolygon input[name="height"]').val(editGraphic.graphic.extrudedHeight.getValue() - editGraphic.graphic.height.getValue());
+                    break;
+                case 'GroundPolygon':
+                    GroundPolygonProp();
+                    $('.GroundPolygon input[name="name"]').val(editGraphic.entity.name);
+                    break;
+                case 'GroundPolyline':
+                    GroundPolylineProp();
+                    $('.GroundPolyline input[name="name"]').val(editGraphic.entity.name);
+                    $('.GroundPolyline input[name="width"]').val(editGraphic.graphic.width.getValue());
+                    break;
+            }
+
+            $('.props input[name="name"]').on('input propertychange', function (event) {
+                var value = $(this).val();
+                if (editGraphic.entity) {
+                    editGraphic.entity.name = value;
+                }
+            });
+        });
+
+        //拉伸面属性
+        function ExtrudedPolygonProp() {
+            $('.props input[name="height"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.graphic && editGraphic.graphic.extrudedHeight) {
+                    editGraphic.graphic.extrudedHeight = parseFloat(value) + editGraphic.graphic.height.getValue();
+                }
+                if (editGraphic.heightpoints) {
+                    editGraphic.heightpoints.forEach(item => {
+                        var entypos = item.position._value;
+                        var entycartographic = Cesium.Cartographic.fromCartesian(entypos);
+                        var lng3 = Cesium.Math.toDegrees(entycartographic.longitude)
+                        var lat3 = Cesium.Math.toDegrees(entycartographic.latitude)
+                        var pos = Cesium.Cartesian3.fromDegrees(lng3, lat3, parseFloat(value) + editGraphic.graphic.height.getValue());
+                        item.position = pos;
+                    })
+                }
+            });
+
+            slider.render({
+                elem: '#opacity-ExtrudedPolygon'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.graphic.material._color._value.alpha = value / 100;
+                }
+            });
+
+            slider.render({
+                elem: '#opacity-ExtrudedPolygon2'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.graphic.outlineColor._value.alpha = value / 100;
+                }
+            });
+
+            colorpicker.render({
+                elem: '#colorchk-ExtrudedPolygon'
+                , color: (editGraphic && editGraphic.fillColor) || '#ff0000' //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+            colorpicker.render({
+                elem: '#colorchk-ExtrudedPolygon2'
+                , color: (editGraphic && editGraphic.outlineColor) || '#ff0000' //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    if (editGraphic.graphic && editGraphic.graphic.material && editGraphic.graphic.outlineColor) {
+                        editGraphic.graphic.outlineColor = new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.alpha / 100);
+                    }
+                }
+            });
+
+            form.on('switch(showExtrudedPolygonOutline)', function (data) {
+                var isShow = this.checked;
+                editGraphic.graphic && (editGraphic.graphic.outline = isShow);
+                if (isShow) {
+                    $('.outline').show();
+                } else {
+                    $('.outline').hide();
+                }
+            });
+            if (editGraphic.graphic && editGraphic.graphic.outline) {
+                $('#showExtrudedPolygonOutline').next().click();
+                $('#showExtrudedPolygonOutline').attr('value', 'on')
+            }
+        }
+
+        //贴地面属性
+        function GroundPolygonProp() {
+            slider.render({
+                elem: '#opacity-GroundPolygon'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.graphic.material._color._value.alpha = value / 100;
+                }
+            });
+
+            colorpicker.render({
+                elem: '#colorchk-GroundPolygon'
+                , color: (editGraphic && editGraphic.fillColor) || '#ff0000' //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+        }
+
+        //贴地线属性
+        function GroundPolylineProp() {
+            $('.props input[name="width"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.graphic && editGraphic.graphic.width) {
+                    editGraphic.graphic.width = parseFloat(value);
+                }
+            });
+
+            slider.render({
+                elem: '#opacity-GroundPolyline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.graphic.material._color._value.alpha = value / 100;
+                }
+            });
+
+            colorpicker.render({
+                elem: '#colorchk-GroundPolyline'
+                , color: (editGraphic && editGraphic.fillColor) || '#ff0000' //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+        }
+
+        function removeGraphic() {
+            if (editGraphic.entity) {
+                Viewer.entities.remove(editGraphic.entity);
+            }
+        }
+
+        function getFillColor(rgba) {
+            editGraphic.fillColor = colorHex('rgb(' + rgba.red * 255 + ',' + rgba.green * 255 + ',' + rgba.blue * 255 + ')');
+            editGraphic.alpha = rgba.alpha * 100;
+        }
+
+        function getOutlineColor(rgba) {
+            editGraphic.outlineColor = colorHex('rgb(' + rgba.red * 255 + ',' + rgba.green * 255 + ',' + rgba.blue * 255 + ')');
+            editGraphic.outlineAlpha = rgba.alpha * 100;
+        }
+
+        function colorHex(rgb) {
+            var _this = rgb;
+            var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+            if (/^(rgb|RGB)/.test(_this)) {
+                var str = _this.replace(/(rgb|RGB)*/g, "");
+                str = str.replace("(", "").replace(")", "");
+                var aColor = str.split(",");
+                var strHex = "#";
+                for (var i = 0; i < aColor.length; i++) {
+                    var hex = Number(aColor[i]).toString(16);
+                    hex = hex.length === 1 ? 0 + '' + hex : hex;// 保证每个rgb的值为2位
+                    if (hex === "0") {
+                        hex += hex;
+                    }
+                    strHex += hex;
+                }
+                if (strHex.length !== 7) {
+                    strHex = _this;
+                }
+                return strHex;
+            } else if (reg.test(_this)) {
+                var aNum = _this.replace(/#/, "").split("");
+                if (aNum.length === 6) {
+                    return _this;
+                } else if (aNum.length === 3) {
+                    var numHex = "#";
+                    for (var i = 0; i < aNum.length; i += 1) {
+                        numHex += (aNum[i] + aNum[i]);
+                    }
+                    return numHex;
+                }
+            } else {
+                return _this;
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+@font-face {
+	font-family: 'YouSheBiaoTiHei';
+	src: url('./YouSheBiaoTiHei.ttf') format('truetype'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+}
+
+@font-face {
+	font-family: 'ZHCJJZT';
+	src: url('./ZHCJJZT-ExtraBold.ttf') format('truetype'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+}
+
+@font-face {
+	font-family: 'Alimama_ShuHeiTi_Bold';
+	src: url('./Alimama_ShuHeiTi_Bold.ttf') format('truetype'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+}
+
+@font-face {
+	font-family: 'DIN-Regular';
+	src: url('./DIN-Regular.otf') format('truetype'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+}
+
+@font-face {
+	font-family: 'DIN-Bold';
+	src: url('./DIN-Bold.otf') format('truetype'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+}

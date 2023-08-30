@@ -1,0 +1,59 @@
+body{
+    padding: 10px 0;
+}
+.label,.billboard,.model,.polyline,.polygon,.rectangle,.ellipse,.polyhedron,.ellipsoid,.cone,.cylinder,.box{
+    display: none;
+}
+form{
+    width: 90%;
+    margin: auto;
+    border-bottom: 1px #ccc solid;
+}
+.layui-form-item{
+    border: 1px #ccc solid;
+    border-bottom: none;
+    margin: 0px;
+}
+.layui-form-label{
+    text-align: left;
+    border-right: 1px #ccc solid;
+    box-sizing: border-box;
+    width: 100px;
+}
+.layui-input{
+    border: none;
+}
+.layui-colorpicker{
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    margin-top: 5px;
+}
+.layui-btn{
+    margin-left: 25px;
+    margin-top: 5px;
+}
+.demo-slider{
+    width: 146px;
+    position: absolute;
+    right: 30px;
+    top: 17px;
+}
+body::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 8px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 8px;
+    scrollbar-arrow-color:red;
+}
+body::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(180, 180, 180, 0.9);
+    box-shadow: inset 0 0 5px rgba(180, 180, 180, 0.9);
+    background: rgba(180, 180, 180, 0.9);
+    scrollbar-arrow-color:red;
+}
+body::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(218, 218, 218,0.2);
+    box-shadow: inset 0 0 5px rgba(218, 218, 218,0.2);
+    border-radius: 0;
+    background: rgba(218, 218, 218,0.1);
+}

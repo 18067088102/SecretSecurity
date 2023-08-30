@@ -1,0 +1,3157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>属性</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        body::-webkit-scrollbar {
+            /*滚动条整体样式*/
+            width: 8px;
+            /*高宽分别对应横竖滚动条的尺寸*/
+            height: 8px;
+            scrollbar-arrow-color: red;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            border-radius: 5px;
+            -webkit-box-shadow: inset 0 0 5px rgba(218, 218, 218, 0.2);
+            box-shadow: inset 0 0 5px rgba(218, 218, 218, 0.2);
+            background: rgba(218, 218, 218, 0.5);
+            scrollbar-arrow-color: red;
+        }
+
+        body::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 5px rgba(218, 218, 218, 0.2);
+            box-shadow: inset 0 0 5px rgba(218, 218, 218, 0.2);
+            border-radius: 0;
+            background: rgba(218, 218, 218, 0.1);
+        }
+
+        html,
+        body,
+        #Attribute {
+            background-color: rgba(0, 0, 0, 0);
+            color: #fff;
+        }
+
+        .layui-form-item {
+            border: 1px #fff solid;
+            margin-bottom: 0px !important;
+            border-bottom: none;
+        }
+
+        .layui-input {
+            background-color: #fff !important;
+            height: 30px;
+            margin-top: 5px
+        }
+
+        .active {
+            border: 1px solid #fc0 !important;
+            box-shadow: 0 0 8px #ddd;
+            -moz-box-shadow: 0 0 8px #ddd;
+            -webkit-box-shadow: 0 0 8px #ddd;
+            cursor: pointer;
+        }
+
+
+        .layui-form-label {
+            width: 100px !important;
+            padding: 11px 15px !important;
+            border-right: 1px #fff solid;
+            font-weight: bold !important;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .layui-input-block {
+            width: 150px !important;
+            margin-left: 150px !important;
+        }
+
+        .mCSB_container {
+            margin-right: 17px !important;
+        }
+
+        legend {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        .removeGraphic {
+            position: absolute;
+            top: -9px;
+            right: 0;
+        }
+
+        .attrTitle {
+            position: relative;
+        }
+
+        .scaleByDistance,
+        .billboardLabel,
+        .outline,
+        .background,
+        .topRadius {
+            display: none;
+        }
+
+        .color {
+            height: 42px;
+        }
+
+        .layui-anim {
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="Attribute" style="margin:0 10px;">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">样式信息</li>
+                <li>属性信息</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <!--基本点-->
+                    <div class="props point" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    基本点
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">大小</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="size" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否不被遮挡</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="isPointDisableDepthTest"
+                                        lay-filter="isPointDisableDepthTest" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">随地图缩放</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" class="isScaleByDistance"
+                                        lay-filter="isScaleByDistance" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item scaleByDistance">
+                                <label class="layui-form-label">最远缩放距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="scaleByDistanceFar" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-point-fill" style="display: inline-block;margin-top: 2px;"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative;">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-point-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否显示边框</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showPointOutline"
+                                        lay-filter="showPointOutline" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline">
+                                <label class="layui-form-label">边框大小</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="outlineWidth" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline color">
+                                <label class="layui-form-label">边框色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-point-outline" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline" style="position:relative;">
+                                <label class="layui-form-label">边框透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-point-outline" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--图片点-->
+                    <div class="props billboard" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    图片点
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">图片链接</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="image" lay-verify="title" autocomplete="off"
+                                        placeholder="0" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">比例大小</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="scale" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">水平对齐</label>
+                                <div class="layui-input-block">
+                                    <select name="horizontalOrigin" class="horizontalOrigin"
+                                        lay-filter="horizontalOrigin">
+                                        <option value="0">居中</option>
+                                        <option value="1">左对齐</option>
+                                        <option value="-1">右对齐</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">垂直对齐</label>
+                                <div class="layui-input-block">
+                                    <select name="verticalOrigin" class="verticalOrigin" lay-filter="verticalOrigin">
+                                        <option value="0">居中</option>
+                                        <option value="-1">上对齐</option>
+                                        <option value="1">下对齐</option>
+                                        <option value="2">基线对齐</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">旋转角度</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="rotation" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.\-]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">宽</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="width" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">高</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="height" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">显示注记</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showLabel" lay-filter="showLabel"
+                                        title="开关">
+                                </div>
+                            </div>
+                            <div class="billboardLabel">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">文本内容</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="label_text" lay-verify="title" autocomplete="off"
+                                            placeholder="0" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">文本字体</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="label_font" lay-verify="title" autocomplete="off"
+                                            placeholder="0" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">文本水平对齐</label>
+                                    <div class="layui-input-block">
+                                        <select name="label_horizontalOrigin" class="label_horizontalOrigin"
+                                            lay-filter="label_horizontalOrigin">
+                                            <option value="0">居中</option>
+                                            <option value="1">左对齐</option>
+                                            <option value="-1">右对齐</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">文本垂直对齐</label>
+                                    <div class="layui-input-block">
+                                        <select name="label_verticalOrigin" class="label_verticalOrigin"
+                                            lay-filter="label_verticalOrigin">
+                                            <option value="0">居中</option>
+                                            <option value="-1">上对齐</option>
+                                            <option value="1">下对齐</option>
+                                            <option value="2">基线对齐</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">文本比例大小</label>
+                                    <div class="layui-input-block">
+                                        <input type="number" name="label_scale" lay-verify="title" autocomplete="off"
+                                            placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                            class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item color">
+                                    <label class="layui-form-label">文本填充色</label>
+                                    <div class="layui-input-block">
+                                        <div id="colorchk-img-label-fill"
+                                            style="display: inline-block;margin-top: 2px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item" style="position:relative;">
+                                    <label class="layui-form-label">文本填充透明度</label>
+                                    <div class="layui-input-block" style="position: absolute;top: 16px">
+                                        <div id="opacity-img-label-fill" class="demo-slider"></div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">显示文本边框</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" lay-skin="switch" id="showLabelOutline"
+                                            lay-filter="showLabelOutline" title="开关">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item outline">
+                                    <label class="layui-form-label">文本边框大小</label>
+                                    <div class="layui-input-block">
+                                        <input type="number" name="label_outlineWidth" lay-verify="title"
+                                            autocomplete="off" placeholder="0"
+                                            onkeyup="value=value.replace(/[^\d\.]/g,'')" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item outline color">
+                                    <label class="layui-form-label">文本边框色</label>
+                                    <div class="layui-input-block">
+                                        <div id="colorchk-img-label-outline"
+                                            style="display: inline-block;margin-top: 2px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item outline" style="position:relative;">
+                                    <label class="layui-form-label">文本边框透明度</label>
+                                    <div class="layui-input-block" style="position: absolute;top: 16px">
+                                        <div id="opacity-img-label-outline" class="demo-slider"></div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">显示文本背景</label>
+                                    <div class="layui-input-block">
+                                        <input type="checkbox" lay-skin="switch" id="showLabelBackground"
+                                            lay-filter="showLabelBackground" title="开关">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item background color">
+                                    <label class="layui-form-label">文本背景色</label>
+                                    <div class="layui-input-block">
+                                        <div id="colorchk-img-label-background"
+                                            style="display: inline-block;margin-top: 2px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item background" style="position:relative;">
+                                    <label class="layui-form-label">文本背景透明度</label>
+                                    <div class="layui-input-block" style="position: absolute;top: 16px">
+                                        <div id="opacity-img-label-background" class="demo-slider"></div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">文本最小可视</label>
+                                    <div class="layui-input-block">
+                                        <input type="number" name="label_minViewDistance" lay-verify="title"
+                                            autocomplete="off" placeholder="0"
+                                            onkeyup="value=value.replace(/[^\d\.]/g,'')" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item" style="border: 1px #fff solid">
+                                    <label class="layui-form-label">文本最大可视</label>
+                                    <div class="layui-input-block">
+                                        <input type="number" name="label_maxViewDistance" lay-verify="title"
+                                            autocomplete="off" placeholder="0"
+                                            onkeyup="value=value.replace(/[^\d\.]/g,'')" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否不被遮挡</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="isBillboardDisableDepthTest"
+                                        lay-filter="isBillboardDisableDepthTest" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">随地图缩放</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" class="isScaleByDistance"
+                                        lay-filter="isScaleByDistance" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item scaleByDistance">
+                                <label class="layui-form-label">最远缩放距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="scaleByDistanceFar" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">图标填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-billboard-fill" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative;">
+                                <label class="layui-form-label">图标填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-billboard-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">图标最小可视</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">图标最大可视</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--文本点-->
+                    <div class="props label" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    文本点
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">内容</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="text" lay-verify="title" autocomplete="off" placeholder="0"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">字体</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="font" lay-verify="title" autocomplete="off" placeholder="0"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">水平对齐</label>
+                                <div class="layui-input-block">
+                                    <select name="horizontalOrigin" class="horizontalOrigin"
+                                        lay-filter="horizontalOrigin">
+                                        <option value="0">居中</option>
+                                        <option value="1">左对齐</option>
+                                        <option value="-1">右对齐</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">垂直对齐</label>
+                                <div class="layui-input-block">
+                                    <select name="verticalOrigin" class="verticalOrigin" lay-filter="verticalOrigin">
+                                        <option value="0">居中</option>
+                                        <option value="-1">上对齐</option>
+                                        <option value="1">下对齐</option>
+                                        <option value="2">基线对齐</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">比例大小</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="scale" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否不被遮挡</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="isLabelDisableDepthTest"
+                                        lay-filter="isLabelDisableDepthTest" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">随地图缩放</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" class="isScaleByDistance"
+                                        lay-filter="isScaleByDistance" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item scaleByDistance">
+                                <label class="layui-form-label">最远缩放距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="scaleByDistanceFar" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-label-fill" style="display: inline-block;margin-top: 2px;"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative;">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-label-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否显示边框</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showLabelOutline"
+                                        lay-filter="showLabelOutline" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline">
+                                <label class="layui-form-label">边框大小</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="outlineWidth" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline color">
+                                <label class="layui-form-label">边框色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-label-outline" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline" style="position:relative;">
+                                <label class="layui-form-label">边框透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-label-outline" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否显示背景</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showLabelBackground"
+                                        lay-filter="showLabelBackground" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item background color">
+                                <label class="layui-form-label">背景色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-label-background" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item background" style="position:relative;">
+                                <label class="layui-form-label">背景透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-label-background" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--模型点-->
+                    <div class="props model" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    模型
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">模型链接</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="url" lay-verify="title" autocomplete="off" placeholder="0"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">高度</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="height" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.\-]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">比例大小</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="scale" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小显示尺寸</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minimumPixelSize" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否执行动画</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="runAnimations"
+                                        lay-filter="runAnimations" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-model-fill" style="display: inline-block;margin-top: 2px;"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative;">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-model-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">自旋转</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="autoRotate" lay-filter="autoRotate"
+                                        title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">方向角</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="heading" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.\-]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">俯仰角</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="pitch" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.\-]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">翻滚角</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="roll" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.\-]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--线-->
+                    <div class="props polyline" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    线
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">线宽</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="width" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否贴地</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showClampToGround_Polyline"
+                                        lay-filter="showClampToGround" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-polyline-fill" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative;">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-polyline-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否显示边框</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showPolylineOutline"
+                                        lay-filter="showPolylineOutline" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline">
+                                <label class="layui-form-label">边框大小</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="outlineWidth" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline color">
+                                <label class="layui-form-label">边框色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-polyline-outline" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline" style="position:relative;">
+                                <label class="layui-form-label">边框透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-polyline-outline" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--多边形-->
+                    <div class="props polygon" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    多边形
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否贴地</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showClampToGround_Polygon"
+                                        lay-filter="showClampToGround" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-polygon-fill" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-polygon-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item showBoundary">
+                                <label class="layui-form-label">是否显示边框</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showPolygonOutline"
+                                        lay-filter="showPolygonOutline" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline color">
+                                <label class="layui-form-label">边框色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-polygon-outline" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline" style="position:relative;">
+                                <label class="layui-form-label">边框透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-polygon-outline" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--矩形-->
+                    <div class="props rectangle" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    矩形
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否贴地</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showClampToGround_Rectangle"
+                                        lay-filter="showClampToGround" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item height">
+                                <label class="layui-form-label">高度</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="height" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.\-]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">旋转角度</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="rotation" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.\-]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-rectangle-fill" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-rectangle-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item showBoundary">
+                                <label class="layui-form-label">是否显示边框</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showRectangleOutline"
+                                        lay-filter="showRectangleOutline" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline color">
+                                <label class="layui-form-label">边框色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-rectangle-outline" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline" style="position:relative;">
+                                <label class="layui-form-label">边框透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-rectangle-outline" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--圆形-->
+                    <div class="props ellipse" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    圆形
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否贴地</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showClampToGround_Ellipse"
+                                        lay-filter="showClampToGround" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item height">
+                                <label class="layui-form-label">高度</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="height" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.\-]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">半径</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="radius" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-ellipse-fill" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-ellipse-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item showBoundary">
+                                <label class="layui-form-label">是否显示边框</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showEllipseOutline"
+                                        lay-filter="showEllipseOutline" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline color">
+                                <label class="layui-form-label">边框色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-ellipse-outline" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline" style="position:relative;">
+                                <label class="layui-form-label">边框透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-ellipse-outline" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--多边体-->
+                    <div class="props ExtrudedPolygon" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    多边体
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">高度</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="height" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">拉伸高度</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="extrudedHeight" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-ExtrudedPolygon-fill"
+                                        style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-ExtrudedPolygon-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否显示边框</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showExtrudedPolygonOutline"
+                                        lay-filter="showExtrudedPolygonOutline" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline color">
+                                <label class="layui-form-label">边框色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-ExtrudedPolygon-outline"
+                                        style="display: inline-block;margin-top: 2px;"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline" style="position:relative;">
+                                <label class="layui-form-label">边框透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-ExtrudedPolygon-outline" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--立方体-->
+                    <div class="props box" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    立方体
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">长</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="long" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">宽</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="width" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">高</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="height" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-box-fill" style="display: inline-block;margin-top: 2px;"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-box-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否显示边框</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showBoxOutline"
+                                        lay-filter="showBoxOutline" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline color">
+                                <label class="layui-form-label">边框色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-box-outline" style="display: inline-block;margin-top: 2px;"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline" style="position:relative;">
+                                <label class="layui-form-label">边框透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-box-outline" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--圆柱/锥体-->
+                    <div class="props cylinder" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block cylinderType" style="line-height: 38px;">
+                                    圆柱体
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">半径</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="radius" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item topRadius">
+                                <label class="layui-form-label">顶部半径</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="topRadius" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">高</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="height" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-cylinder-fill" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-cylinder-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否显示边框</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showCylinderOutline"
+                                        lay-filter="showCylinderOutline" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline color">
+                                <label class="layui-form-label">边框色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-cylinder-outline" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline" style="position:relative;">
+                                <label class="layui-form-label">边框透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-cylinder-outline" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!--球体-->
+                    <div class="props ellipsoid" style="display: none">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型</label>
+                                <div class="layui-input-block" style="line-height: 38px;">
+                                    球体
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="0"
+                                        value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">半径</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="radius" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item color">
+                                <label class="layui-form-label">填充色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-ellipsoid-fill" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="position:relative">
+                                <label class="layui-form-label">填充透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-ellipsoid-fill" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否显示边框</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" lay-skin="switch" id="showEllipsoidOutline"
+                                        lay-filter="showEllipsoidOutline" title="开关">
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline color">
+                                <label class="layui-form-label">边框色</label>
+                                <div class="layui-input-block">
+                                    <div id="colorchk-ellipsoid-outline" style="display: inline-block;margin-top: 2px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item outline" style="position:relative;">
+                                <label class="layui-form-label">边框透明度</label>
+                                <div class="layui-input-block" style="position: absolute;top: 16px">
+                                    <div id="opacity-ellipsoid-outline" class="demo-slider"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">最小可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="minViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item" style="border: 1px #fff solid">
+                                <label class="layui-form-label">最大可视距离</label>
+                                <div class="layui-input-block">
+                                    <input type="number" name="maxViewDistance" lay-verify="title" autocomplete="off"
+                                        placeholder="0" onkeyup="value=value.replace(/[^\d\.]/g,'')"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <table id="propData" lay-filter="propData"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+          <button class="layui-btn layui-btn-sm" lay-event="add">新增</button>
+          <button class="layui-btn layui-btn-sm" lay-event="remove">删除</button>
+        </div>
+      </script>
+    <script src="../layui/layui.js"></script>
+    <script>
+        var Viewer = parent.sgworld._Viewer;
+        var Cesium = parent.Cesium;
+        var PopupData = parent.SmartEarthPopupData;
+        var type = PopupData.propType;
+        var editGraphic = PopupData.editGraphic;
+        !editGraphic && (editGraphic = {});
+
+        layui.use(['element', 'form', 'slider', 'colorpicker', 'table'], function () {
+            window.$ = layui.jquery;
+            window.element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+            window.table = layui.table;
+            window.form = layui.form;
+            window.slider = layui.slider;
+            window.colorpicker = layui.colorpicker;
+
+
+            //多边体
+            if (type === 'polygon' && editGraphic.getValue('extrudedHeight')) {
+                type = 'ExtrudedPolygon';
+            }
+            //圆锥体
+            if (type === 'cylinder' && !editGraphic.entity.changeTop) {
+                $('.cylinder input[name="topRadius"]').val(editGraphic.getValue('topRadius').toFixed(2));
+                $('.cylinder .topRadius').show();
+                $('.cylinder .cylinderType').html('圆锥体');
+            }
+            $('#Attribute').find("." + type).show();
+
+            $('.props input[name="name"]').val(editGraphic.getValue('name'));
+            $('.props input[name="name"]').on('input propertychange', function (event) {
+                let value = $(this).val();
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('name', value);
+                }
+            })
+
+            let distanceDisplayCondition = editGraphic.getValue('distanceDisplayCondition');
+            $('.props input[name="minViewDistance"]').val(distanceDisplayCondition.near);
+            $('.props input[name="minViewDistance"]').on('input propertychange', function (event) {
+                var value = $(this).val();
+                distanceDisplayCondition.near = value;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('distanceDisplayCondition', distanceDisplayCondition);
+                }
+            });
+
+            $('.props input[name="maxViewDistance"]').val(distanceDisplayCondition.far);
+            $('.props input[name="maxViewDistance"]').on('input propertychange', function (event) {
+                var value = $(this).val();
+                distanceDisplayCondition.far = value;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('distanceDisplayCondition', distanceDisplayCondition);
+                }
+            });
+
+            let scaleByDistance = editGraphic.getValue('scaleByDistance') || new Cesium.NearFarScalar(0, 1, distanceDisplayCondition.far, 0);
+            $('.props input[name="scaleByDistanceFar"]').val(scaleByDistance.far);
+            $('.props input[name="scaleByDistanceFar"]').on('input propertychange', function (event) {
+                var value = $(this).val();
+                scaleByDistance.far = value;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('scaleByDistance', scaleByDistance);
+                    editGraphic.labelGraphic && editGraphic.setValue('label_scaleByDistance', scaleByDistance);
+                }
+            });
+
+            //随地图缩放
+            form.on('switch(isScaleByDistance)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    editGraphic.setValue('scaleByDistance', scaleByDistance);
+                    editGraphic.labelGraphic && editGraphic.setValue('label_scaleByDistance', scaleByDistance);
+                } else {
+                    editGraphic.setValue('scaleByDistance', undefined);
+                    editGraphic.labelGraphic && editGraphic.setValue('label_scaleByDistance', undefined);
+                }
+                isShow ? $(".scaleByDistance").show() : $(".scaleByDistance").hide();
+            });
+            if (editGraphic.getValue('scaleByDistance')) {
+                $('.isScaleByDistance').next().click();
+                $('.isScaleByDistance').attr('value', 'on')
+            }
+
+            if (editGraphic.labelGraphic) {
+                let distanceDisplayCondition = editGraphic.getValue('label_distanceDisplayCondition');
+                $('.props input[name="label_minViewDistance"]').val(distanceDisplayCondition.near);
+                $('.props input[name="label_minViewDistance"]').on('input propertychange', function (event) {
+                    var value = $(this).val();
+                    distanceDisplayCondition.near = value;
+                    if (editGraphic.setValue) {
+                        editGraphic.setValue('label_distanceDisplayCondition', distanceDisplayCondition);
+                    }
+                });
+
+                $('.props input[name="label_maxViewDistance"]').val(distanceDisplayCondition.far);
+                $('.props input[name="label_maxViewDistance"]').on('input propertychange', function (event) {
+                    var value = $(this).val();
+                    distanceDisplayCondition.far = value;
+                    if (editGraphic.setValue) {
+                        editGraphic.setValue('label_distanceDisplayCondition', distanceDisplayCondition);
+                    }
+                });
+            }
+
+
+            let data = editGraphic.entity.properties;
+            !data && (data = new Cesium.PropertyBag())
+
+            let tabelData = [];
+            for (let i = 0; i < data.propertyNames.length; i++) {
+                let key = data.propertyNames[i];
+                tabelData.push({
+                    key,
+                    value: data[key]
+                })
+            }
+            if (!tabelData.length) {
+                tabelData.push({
+                    key: 'name',
+                    value: editGraphic.entity.name
+                })
+            }
+
+            table.render({
+                elem: '#propData',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: [],
+                editTrigger: 'dblclick', // 触发编辑的事件类型（默认 click ）。 v2.7.0 新增，之前版本固定为单击触发
+                cols: [[ //标题栏
+                    { type: 'checkbox', fixed: 'left' },
+                    { field: 'key', title: '属性', width: 116, sort: true, edit: 'text' }
+                    , { field: 'value', title: '属性值', width: 151, edit: 'text' }
+                ]]
+                , data: tabelData
+            })
+
+            // 单元格编辑后的事件
+            table.on('edit(propData)', function (obj) {
+                tabelData = table.cache.propData;
+                editGraphic.entity.propData = tabelData;
+            });
+
+            //头工具栏事件
+            table.on('toolbar(propData)', function (obj) {
+                let checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+                let data = checkStatus.data;
+                let checked = [];
+                data.forEach(item => {
+                    checked.push(item.key);
+                })
+                switch (obj.event) {
+                    case 'add':
+                        tabelData.push({
+                            key: '',
+                            value: ''
+                        })
+                        break;
+                    case 'remove':
+                        for (let i = 0; i < tabelData.length; i++) {
+                            if (checked.includes(tabelData[i].key)) {
+                                tabelData.splice(i, 1);
+                                i--;
+                            }
+                        }
+                        break;
+                };
+                table.reload('propData', {
+                    data: tabelData
+                })
+                editGraphic.entity.propData = tabelData;
+            });
+
+            switch (type) {
+                case 'point':
+                    $('.point input[name="size"]').val(editGraphic.getValue('pixelSize'));
+                    $('.point input[name="outlineWidth"]').val(editGraphic.getValue('outlineWidth'));
+                    pointProp();
+                    break;
+                case 'billboard':
+                    $('.billboard input[name="scale"]').val(editGraphic.getValue('scale'));
+                    $('.billboard input[name="image"]').val(editGraphic.getValue('image'));
+                    $('.billboard input[name="rotation"]').val(editGraphic.getValue('rotation'));
+                    $('.billboard input[name="width"]').val(editGraphic.getValue('width'));
+                    $('.billboard input[name="height"]').val(editGraphic.getValue('height'));
+
+                    $('.billboard input[name="label_scale"]').val(editGraphic.getValue('label_scale'));
+                    $('.billboard input[name="label_text"]').val(editGraphic.getValue('label_text'));
+                    $('.billboard input[name="label_font"]').val(editGraphic.getValue('label_font'));
+                    $('.billboard input[name="label_outlineWidth"]').val(editGraphic.getValue('label_outlineWidth'));
+                    billboardProp();
+                    break;
+                case 'label':
+                    $('.label input[name="scale"]').val(editGraphic.getValue('scale'));
+                    $('.label input[name="text"]').val(editGraphic.getValue('text'));
+                    $('.label input[name="font"]').val(editGraphic.getValue('font'));
+                    $('.label input[name="outlineWidth"]').val(editGraphic.getValue('outlineWidth'));
+                    labelProp();
+                    break;
+                case 'model':
+                    $('.model input[name="height"]').val(editGraphic.getValue('pHeight').toFixed(2));
+                    $('.model input[name="scale"]').val(editGraphic.getValue('scale'));
+                    $('.model input[name="url"]').val(editGraphic.getValue('uri'));
+                    $('.model input[name="minimumPixelSize"]').val(editGraphic.getValue('minimumPixelSize'));
+                    $('.model input[name="heading"]').val(editGraphic.getValue('heading'));
+                    $('.model input[name="pitch"]').val(editGraphic.getValue('pitch'));
+                    $('.model input[name="roll"]').val(editGraphic.getValue('roll'));
+                    modelProp();
+                    break;
+                case 'polyline':
+                    $('.polyline input[name="outlineWidth"]').val(editGraphic.getValue('material').outlineWidth);
+                    polylineProp();
+                    $('.polyline input[name="width"]').val(editGraphic.getValue('width'));
+                    $('.polyline input[name="outlineWidth"]').val(editGraphic.getValue('material').outlineWidth);
+                    break;
+                case 'polygon':
+                    polygonProp();
+                    break;
+                case 'rectangle':
+                    $('.rectangle input[name="height"]').val(editGraphic.getValue('height') && editGraphic.getValue('height').toFixed(2));
+                    $('.rectangle input[name="rotation"]').val(editGraphic.getValue('rotation'));
+                    rectangleProp();
+                    break;
+                case 'ellipse':
+                    $('.ellipse input[name="height"]').val(editGraphic.getValue('height') && editGraphic.getValue('height').toFixed(2));
+                    $('.ellipse input[name="radius"]').val(editGraphic.getValue('radius') && editGraphic.getValue('radius').toFixed(2));
+                    ellipseProp();
+                    break;
+                case 'box':
+                    boxProp();
+                    let dimensions = editGraphic.getValue('dimensions');
+                    $('.box input[name="long"]').val(dimensions.x.toFixed(2));
+                    $('.box input[name="width"]').val(dimensions.y.toFixed(2));
+                    $('.box input[name="height"]').val(dimensions.z.toFixed(2));
+                    break;
+                case 'cylinder':
+                    cylinderProp();
+                    $('.cylinder input[name="radius"]').val(editGraphic.getValue('radius').toFixed(2));
+                    $('.cylinder input[name="height"]').val(editGraphic.getValue('length').toFixed(2));
+                    break;
+                case 'ellipsoid':
+                    ellipsoidProp();
+                    $('.ellipsoid input[name="radius"]').val(editGraphic.getValue('radius').toFixed(2));
+                    break;
+                case 'ExtrudedPolygon':
+                    ExtrudedPolygonProp();
+                    $('.ExtrudedPolygon input[name="height"]').val(editGraphic.getValue('height').toFixed(2));
+                    $('.ExtrudedPolygon input[name="extrudedHeight"]').val((editGraphic.getValue('extrudedHeight') - editGraphic.getValue('height')).toFixed(2));
+                    break;
+            }
+        });
+
+        //基本点属性
+        function pointProp() {
+            //大小
+            $('.point input[name="size"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('pixelSize', parseFloat(value));
+                }
+            });
+            //边框宽
+            $('.props input[name="outlineWidth"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('outlineWidth', parseFloat(value));
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-point-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //边框透明度
+            slider.render({
+                elem: '#opacity-point-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.setValue('outlineAlpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-point-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //边框色
+            colorpicker.render({
+                elem: '#colorchk-point-outline'
+                , color: editGraphic.outlineColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    editGraphic.graphic.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.outlineAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showPointOutline)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+
+                    let value = $('.point input[name="outlineWidth"]').val();
+                    value = parseFloat(value);
+                    value == 0 && (value = 1, $('.point input[name="outlineWidth"]').val(1));
+                    editGraphic.setValue('outlineWidth', value);
+                } else {
+                    $('.outline').hide();
+                    editGraphic.setValue('outlineWidth', 0);
+                }
+            });
+            if (editGraphic.getValue('outlineWidth') != 0) {
+                $('#showPointOutline').next().click();
+                $('#showPointOutline').attr('value', 'on')
+            }
+            //是否显示边框
+            form.on('switch(isPointDisableDepthTest)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    editGraphic.setValue('disableDepthTestDistance', Number.POSITIVE_INFINITY);
+                } else {
+                    editGraphic.setValue('disableDepthTestDistance', undefined);
+                }
+            });
+            if (editGraphic.getValue('disableDepthTestDistance') === Number.POSITIVE_INFINITY) {
+                $('#isPointDisableDepthTest').next().click();
+                $('#isPointDisableDepthTest').attr('value', 'on')
+            }
+        }
+
+        //图片点属性
+        function billboardProp() {
+            //图片
+            $('.billboard input[name="image"]').on('blur', function (event) {
+                var value = $(this).val();
+                if (value === '') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('image', value);
+                }
+            });
+            //大小
+            $('.billboard input[name="scale"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('scale', parseFloat(value));
+                }
+            });
+
+            //旋转
+            $('.billboard input[name="rotation"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.\-]/g, '');
+                if (value === '.') return;
+                if (value === '') value = undefined;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('rotation', -parseFloat(value) * Math.PI / 180);
+                }
+            });
+
+            //宽
+            $('.billboard input[name="width"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('width', parseFloat(value));
+                }
+            });
+
+            //高
+            $('.billboard input[name="height"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('height', parseFloat(value));
+                }
+            });
+
+            let horizontalOrigin = editGraphic.getValue('horizontalOrigin');
+            $(`.billboard .horizontalOrigin option[value="${horizontalOrigin}"]`).attr('selected', true);
+
+            //水平对齐
+            form.on('select(horizontalOrigin)', function (data) {
+                var value = parseInt(data.value);
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('horizontalOrigin', value);
+                }
+            });
+
+            let verticalOrigin = editGraphic.getValue('verticalOrigin');
+            $(`.billboard .verticalOrigin option[value="${verticalOrigin}"]`).attr('selected', true);
+            form.render('select');
+
+            //垂直对齐
+            form.on('select(verticalOrigin)', function (data) {
+                var value = parseInt(data.value);
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('verticalOrigin', value);
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-billboard-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-billboard-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //是否不被遮挡
+            form.on('switch(isBillboardDisableDepthTest)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    editGraphic.setValue('disableDepthTestDistance', Number.POSITIVE_INFINITY);
+                    editGraphic.setValue('label_disableDepthTestDistance', Number.POSITIVE_INFINITY);
+                } else {
+                    editGraphic.setValue('disableDepthTestDistance', undefined);
+                    editGraphic.setValue('label_disableDepthTestDistance', undefined);
+                }
+            });
+            if (editGraphic.getValue('disableDepthTestDistance') === Number.POSITIVE_INFINITY) {
+                $('#isBillboardDisableDepthTest').next().click();
+                $('#isBillboardDisableDepthTest').attr('value', 'on')
+            }
+
+            //显示注记
+            form.on('switch(showLabel)', function (data) {
+                var isShow = this.checked;
+                editGraphic.setValue('showLabel', isShow);
+                isShow ? $(".billboardLabel").show() : $(".billboardLabel").hide()
+            });
+            if (editGraphic.getValue('label_show')) {
+                $('#showLabel').next().click();
+                $('#showLabel').attr('value', 'on')
+            }
+
+            //字体
+            $('.billboard input[name="label_font"]').on('blur', function (event) {
+                var value = $(this).val();
+                if (value === '') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('label_font', value);
+                }
+            });
+
+            //内容
+            $('.billboard input[name="label_text"]').on('input propertychange', function (event) {
+                var value = $(this).val();
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('label_text', value);
+                }
+            });
+
+            //比例
+            $('.billboard input[name="label_scale"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('label_scale', parseFloat(value));
+                }
+            });
+            //边框宽
+            $('.billboard input[name="label_outlineWidth"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('label_outlineWidth', parseFloat(value));
+                }
+            });
+
+            let label_horizontalOrigin = editGraphic.getValue('label_horizontalOrigin');
+            $(`.billboard .label_horizontalOrigin option[value="${label_horizontalOrigin}"]`).attr('selected', true);
+
+            //水平对齐
+            form.on('select(label_horizontalOrigin)', function (data) {
+                var value = parseInt(data.value);
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('label_horizontalOrigin', value);
+                }
+            });
+
+            let label_verticalOrigin = editGraphic.getValue('label_verticalOrigin');
+            $(`.billboard .label_verticalOrigin option[value="${label_verticalOrigin}"]`).attr('selected', true);
+            form.render('select');
+
+            //垂直对齐
+            form.on('select(label_verticalOrigin)', function (data) {
+                var value = parseInt(data.value);
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('label_verticalOrigin', value);
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-img-label-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.label_alpha
+                , change: function (value) {
+                    editGraphic.label_alpha = value;
+                    editGraphic.setValue('label_alpha', value / 100);
+                }
+            });
+
+            //边框透明度
+            slider.render({
+                elem: '#opacity-img-label-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.label_outlineAlpha
+                , change: function (value) {
+                    editGraphic.label_outlineAlpha = value;
+                    editGraphic.setValue('label_outlineAlpha', value / 100);
+                }
+            });
+
+            //背景透明度
+            slider.render({
+                elem: '#opacity-img-label-background'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.label_backgroundAlpha
+                , change: function (value) {
+                    editGraphic.label_backgroundAlpha = value;
+                    editGraphic.setValue('label_backgroundAlpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-img-label-fill'
+                , color: editGraphic.label_fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.label_fillColor = color;
+                    editGraphic.labelGraphic.fillColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.label_fillColor).withAlpha(editGraphic.label_alpha / 100));
+                }
+            });
+
+            //边框色
+            colorpicker.render({
+                elem: '#colorchk-img-label-outline'
+                , color: editGraphic.label_outlineColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.label_outlineColor = color;
+                    editGraphic.labelGraphic.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.label_outlineColor).withAlpha(editGraphic.label_outlineAlpha / 100));
+                }
+            });
+
+            //背景色
+            colorpicker.render({
+                elem: '#colorchk-img-label-background'
+                , color: editGraphic.label_backgroundColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.label_backgroundColor = color;
+                    editGraphic.labelGraphic.backgroundColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.label_backgroundColor).withAlpha(editGraphic.label_backgroundAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showLabelOutline)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+
+                    let value = $('.label input[name="label_outlineWidth"]').val();
+                    value = parseFloat(value);
+                    value == 0 && (value = 1, $('.label input[name="label_outlineWidth"]').val(1));
+                    editGraphic.setValue('label_outlineWidth', value);
+                } else {
+                    $('.outline').hide();
+                    editGraphic.setValue('label_outlineWidth', 0);
+                }
+            });
+            if (editGraphic.getValue('label_outlineWidth') != 0) {
+                $('#showLabelOutline').next().click();
+                $('#showLabelOutline').attr('value', 'on')
+            }
+
+            //是否显示背景
+            form.on('switch(showLabelBackground)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    $('.background').show();
+                } else {
+                    $('.background').hide();
+                }
+                editGraphic.setValue('label_showBackground', isShow);
+            });
+            if (editGraphic.getValue('label_showBackground')) {
+                $('#showLabelBackground').next().click();
+                $('#showLabelBackground').attr('value', 'on')
+            }
+        }
+
+        //文本点属性
+        function labelProp() {
+            //字体
+            $('.label input[name="font"]').on('blur', function (event) {
+                var value = $(this).val();
+                if (value === '') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('font', value);
+                }
+            });
+
+            //内容
+            $('.label input[name="text"]').on('input propertychange', function (event) {
+                var value = $(this).val();
+                while (value.indexOf("\\n") >= 0) { value = value.replace("\\n", "\n"); }
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('text', value);
+                }
+            });
+
+            //比例
+            $('.label input[name="scale"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('scale', parseFloat(value));
+                }
+            });
+            //边框宽
+            $('.label input[name="outlineWidth"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('outlineWidth', parseFloat(value));
+                }
+            });
+
+            let horizontalOrigin = editGraphic.getValue('horizontalOrigin');
+            $(`.label .horizontalOrigin option[value="${horizontalOrigin}"]`).attr('selected', true);
+
+            //水平对齐
+            form.on('select(horizontalOrigin)', function (data) {
+                var value = parseInt(data.value);
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('horizontalOrigin', value);
+                }
+            });
+
+            let verticalOrigin = editGraphic.getValue('verticalOrigin');
+            $(`.label .verticalOrigin option[value="${verticalOrigin}"]`).attr('selected', true);
+            form.render('select');
+
+            //垂直对齐
+            form.on('select(verticalOrigin)', function (data) {
+                var value = parseInt(data.value);
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('verticalOrigin', value);
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-label-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //边框透明度
+            slider.render({
+                elem: '#opacity-label-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.setValue('outlineAlpha', value / 100);
+                }
+            });
+
+            //背景透明度
+            slider.render({
+                elem: '#opacity-label-background'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.backgroundAlpha
+                , change: function (value) {
+                    editGraphic.backgroundAlpha = value;
+                    editGraphic.setValue('backgroundAlpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-label-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.fillColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //边框色
+            colorpicker.render({
+                elem: '#colorchk-label-outline'
+                , color: editGraphic.outlineColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    editGraphic.graphic.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.outlineAlpha / 100));
+                }
+            });
+
+            //背景色
+            colorpicker.render({
+                elem: '#colorchk-label-background'
+                , color: editGraphic.backgroundColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.backgroundColor = color;
+                    editGraphic.graphic.backgroundColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.backgroundColor).withAlpha(editGraphic.backgroundAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showLabelOutline)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+
+                    let value = $('.label input[name="outlineWidth"]').val();
+                    value = parseFloat(value);
+                    value == 0 && (value = 1, $('.label input[name="outlineWidth"]').val(1));
+                    editGraphic.setValue('outlineWidth', value);
+                } else {
+                    $('.outline').hide();
+                    editGraphic.setValue('outlineWidth', 0);
+                }
+            });
+            if (editGraphic.getValue('outlineWidth') != 0) {
+                $('#showLabelOutline').next().click();
+                $('#showLabelOutline').attr('value', 'on')
+            }
+
+            //是否显示背景
+            form.on('switch(showLabelBackground)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    $('.background').show();
+                } else {
+                    $('.background').hide();
+                }
+                editGraphic.setValue('showBackground', isShow);
+            });
+            if (editGraphic.getValue('showBackground')) {
+                $('#showLabelBackground').next().click();
+                $('#showLabelBackground').attr('value', 'on')
+            }
+
+            //是否不被遮挡
+            form.on('switch(isLabelDisableDepthTest)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    editGraphic.setValue('disableDepthTestDistance', Number.POSITIVE_INFINITY);
+                } else {
+                    editGraphic.setValue('disableDepthTestDistance', undefined);
+                }
+            });
+            if (editGraphic.getValue('disableDepthTestDistance') === Number.POSITIVE_INFINITY) {
+                $('#isLabelDisableDepthTest').next().click();
+                $('#isLabelDisableDepthTest').attr('value', 'on')
+            }
+        }
+
+        //模型点属性
+        function modelProp() {
+            //模型链接
+            $('.model input[name="url"]').on('blur', function (event) {
+                var value = $(this).val();
+                if (value === '') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('uri', value);
+                }
+            });
+
+            //高度
+            $('.model input[name="height"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.\-]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('pHeight', parseFloat(value));
+                }
+            });
+
+            //比例
+            $('.model input[name="scale"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('scale', parseFloat(value));
+                }
+            });
+
+            //最小显示尺寸
+            $('.model input[name="minimumPixelSize"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('minimumPixelSize', parseFloat(value));
+                }
+            });
+
+            //方向
+            $('.model input[name="heading"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.\-]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('heading', parseFloat(value));
+                }
+            });
+
+            //俯仰
+            $('.model input[name="pitch"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.\-]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('pitch', parseFloat(value));
+                }
+            });
+
+            //翻滚
+            $('.model input[name="roll"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.\-]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('roll', parseFloat(value));
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-model-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-model-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //是否执行动画
+            form.on('switch(runAnimations)', function (data) {
+                var isShow = this.checked;
+                editGraphic.setValue('runAnimations', isShow);
+            });
+            if (editGraphic.getValue('runAnimations')) {
+                $('#runAnimations').next().click();
+                $('#runAnimations').attr('value', 'on')
+            }
+
+            //是否自旋转
+            form.on('switch(autoRotate)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    if (!editGraphic.entity.autoRotate) {
+                        editGraphic.setValue('autoRotate', 2);
+                    }
+                } else {
+                    editGraphic.setValue('autoRotate', false);
+                }
+                editGraphic.entity.autoRotate = isShow;
+            });
+            if (editGraphic.entity.autoRotate) {
+                $('#autoRotate').next().click();
+                $('#autoRotate').attr('value', 'on')
+            }
+        }
+
+        //拉伸面属性
+        function ExtrudedPolygonProp() {
+            $('.ExtrudedPolygon input[name="height"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('height', parseFloat(value));
+
+                    let extrudedHeight = $('.ExtrudedPolygon input[name="extrudedHeight"]').val();
+                    editGraphic.setValue('extrudedHeight', parseFloat(extrudedHeight) + parseFloat(value));
+                }
+            });
+            $('.ExtrudedPolygon input[name="extrudedHeight"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('extrudedHeight', parseFloat(value) + editGraphic.getValue('height'));
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-ExtrudedPolygon-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //边框透明度
+            slider.render({
+                elem: '#opacity-ExtrudedPolygon-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.setValue('outlineAlpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-ExtrudedPolygon-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //边框色
+            colorpicker.render({
+                elem: '#colorchk-ExtrudedPolygon-outline'
+                , color: editGraphic.outlineColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    editGraphic.graphic.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.outlineAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showExtrudedPolygonOutline)', function (data) {
+                let isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+                } else {
+                    $('.outline').hide();
+                }
+                editGraphic.setValue('outline', isShow);
+            });
+            if (editGraphic.getValue('outline')) {
+                $('#showExtrudedPolygonOutline').next().click();
+                $('#showExtrudedPolygonOutline').attr('value', 'on')
+            }
+        }
+
+        //多边形属性
+        function polygonProp() {
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-polygon-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //边框透明度
+            slider.render({
+                elem: '#opacity-polygon-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.setValue('outlineAlpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-polygon-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //边框色
+            colorpicker.render({
+                elem: '#colorchk-polygon-outline'
+                , color: editGraphic.outlineColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    editGraphic.graphic.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.outlineAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showPolygonOutline)', function (data) {
+                let isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+                } else {
+                    $('.outline').hide();
+                }
+                editGraphic.setValue('outline', isShow);
+            });
+            if (editGraphic.getValue('outline')) {
+                $('#showPolygonOutline').next().click();
+                $('#showPolygonOutline').attr('value', 'on')
+            }
+
+            //是否贴地
+            form.on('switch(showClampToGround)', function (data) {
+                editGraphic.setValue('clampToGround', this.checked);
+                if (!this.checked) {
+                    $('.showBoundary').show();
+                } else {
+                    $('.showBoundary').hide();
+                }
+            });
+            if (editGraphic.getValue('heightReference') === Cesium.HeightReference.CLAMP_TO_GROUND) {
+                $('#showClampToGround_Polygon').next().click();
+                $('#showClampToGround_Polygon').attr('value', 'on')
+            }
+        }
+
+        //矩形属性
+        function rectangleProp() {
+            //旋转
+            $('.rectangle input[name="rotation"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.\-]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('rotation', -parseFloat(value) * Math.PI / 180);
+                }
+            });
+
+            //高度
+            $('.rectangle input[name="height"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.\-]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('height', parseFloat(value));
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-rectangle-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //边框透明度
+            slider.render({
+                elem: '#opacity-rectangle-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.setValue('outlineAlpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-rectangle-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //边框色
+            colorpicker.render({
+                elem: '#colorchk-rectangle-outline'
+                , color: editGraphic.outlineColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    editGraphic.graphic.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.outlineAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showRectangleOutline)', function (data) {
+                let isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+                } else {
+                    $('.outline').hide();
+                }
+                editGraphic.setValue('outline', isShow);
+            });
+            if (editGraphic.getValue('outline')) {
+                $('#showRectangleOutline').next().click();
+                $('#showRectangleOutline').attr('value', 'on')
+            }
+
+            let isRenderCheck;
+            //是否贴地
+            form.on('switch(showClampToGround)', function (data) {
+                if (isRenderCheck) {
+                    isRenderCheck = false;
+                    return;
+                }
+                editGraphic.setValue('clampToGround', this.checked);
+                if (!this.checked) {
+                    $('.showBoundary').show();
+                } else {
+                    $('.showBoundary').hide();
+                }
+                editGraphic.getValue('height') && $('.rectangle input[name="height"]').val(editGraphic.getValue('height'))
+                this.checked ? $('.rectangle .height').hide() : $('.rectangle .height').show();
+            });
+            if (editGraphic.getValue('heightReference') === Cesium.HeightReference.CLAMP_TO_GROUND) {
+                isRenderCheck = true;
+                $('#showClampToGround_Rectangle').next().click();
+                $('#showClampToGround_Rectangle').attr('value', 'on');
+                $('.rectangle .height').hide();
+            }
+        }
+
+        //圆形属性
+        function ellipseProp() {
+            //高度
+            $('.ellipse input[name="height"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.\-]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('height', parseFloat(value));
+                }
+            });
+
+            //半径
+            $('.ellipse input[name="radius"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('radius', parseFloat(value));
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-ellipse-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //边框透明度
+            slider.render({
+                elem: '#opacity-ellipse-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.setValue('outlineAlpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-ellipse-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //边框色
+            colorpicker.render({
+                elem: '#colorchk-ellipse-outline'
+                , color: editGraphic.outlineColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    editGraphic.graphic.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.outlineAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showEllipseOutline)', function (data) {
+                let isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+                } else {
+                    $('.outline').hide();
+                }
+                editGraphic.setValue('outline', isShow);
+            });
+            if (editGraphic.getValue('outline')) {
+                $('#showEllipseOutline').next().click();
+                $('#showEllipseOutline').attr('value', 'on')
+            }
+
+            let isRenderCheck;
+            //是否贴地
+            form.on('switch(showClampToGround)', function (data) {
+                if (isRenderCheck) {
+                    isRenderCheck = false;
+                    return;
+                }
+                editGraphic.setValue('clampToGround', this.checked);
+                if (!this.checked) {
+                    $('.showBoundary').show();
+                } else {
+                    $('.showBoundary').hide();
+                }
+                editGraphic.getValue('height') && $('.ellipse input[name="height"]').val(editGraphic.getValue('height'))
+                this.checked ? $('.ellipse .height').hide() : $('.ellipse .height').show();
+            });
+            if (editGraphic.getValue('heightReference') === Cesium.HeightReference.CLAMP_TO_GROUND) {
+                isRenderCheck = true;
+                $('.ellipse .height').hide();
+                $('#showClampToGround_Ellipse').next().click();
+                $('#showClampToGround_Ellipse').attr('value', 'on')
+            }
+        }
+
+        //线属性
+        function polylineProp() {
+            //线宽
+            $('.props input[name="width"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('width', parseFloat(value));
+                }
+            });
+
+            //边框宽
+            $('.props input[name="outlineWidth"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('outlineWidth', parseFloat(value));
+                }
+            });
+
+            //填充色
+            slider.render({
+                elem: '#opacity-polyline-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //边框色
+            slider.render({
+                elem: '#opacity-polyline-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.setValue('outlineAlpha', value / 100);
+                }
+            });
+
+            //填充色透明度
+            colorpicker.render({
+                elem: '#colorchk-polyline-fill'
+                , color: editGraphic.fillColor //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //边框透明度
+            colorpicker.render({
+                elem: '#colorchk-polyline-outline'
+                , color: editGraphic.outlineColor //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    editGraphic.graphic.material.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.outlineAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showPolylineOutline)', function (data) {
+                var isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+
+                    let value = $('.polyline input[name="outlineWidth"]').val();
+                    value = parseFloat(value);
+                    value == 0 && (value = 1, $('.polyline input[name="outlineWidth"]').val(1));
+                    editGraphic.setValue('outlineWidth', value);
+                } else {
+                    $('.outline').hide();
+                    editGraphic.setValue('outlineWidth', 0);
+                }
+            });
+            if (editGraphic.getValue('material') && editGraphic.getValue('material').outlineWidth != 0) {
+                $('#showPolylineOutline').next().click();
+                $('#showPolylineOutline').attr('value', 'on')
+            }
+
+            //是否贴地
+            form.on('switch(showClampToGround)', function (data) {
+                editGraphic.setValue('clampToGround', this.checked);
+            });
+            if (editGraphic.getValue('clampToGround')) {
+                $('#showClampToGround_Polyline').next().click();
+                $('#showClampToGround_Polyline').attr('value', 'on')
+            }
+        }
+
+        //立方体属性
+        function boxProp() {
+            //长
+            $('.box input[name="long"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('long', parseFloat(value));
+                }
+            });
+
+            //宽
+            $('.box input[name="width"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('width', parseFloat(value));
+                }
+            });
+
+            //高
+            $('.box input[name="height"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('height', parseFloat(value));
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-box-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //边框透明度
+            slider.render({
+                elem: '#opacity-box-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.setValue('outlineAlpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-box-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //边框色
+            colorpicker.render({
+                elem: '#colorchk-box-outline'
+                , color: editGraphic.outlineColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    editGraphic.graphic.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.outlineAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showBoxOutline)', function (data) {
+                let isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+                } else {
+                    $('.outline').hide();
+                }
+                editGraphic.setValue('outline', isShow);
+            });
+            if (editGraphic.getValue('outline')) {
+                $('#showBoxOutline').next().click();
+                $('#showBoxOutline').attr('value', 'on')
+            }
+        }
+
+        //圆柱体属性
+        function cylinderProp() {
+            //半径
+            $('.cylinder input[name="radius"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('radius', parseFloat(value));
+                }
+            });
+
+            if (!editGraphic.entity.changeTop) {
+                //顶部半径
+                $('.cylinder input[name="topRadius"]').on('input propertychange', function (event) {
+                    var value = $(this).val().replace(/[^\d\.]/g, '');
+                    if (value === '' || value === '.') return;
+                    if (editGraphic.setValue) {
+                        editGraphic.setValue('topRadius', parseFloat(value));
+                    }
+                });
+            }
+
+            //高
+            $('.cylinder input[name="height"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('length', parseFloat(value));
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-cylinder-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //边框透明度
+            slider.render({
+                elem: '#opacity-cylinder-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.setValue('outlineAlpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-cylinder-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //边框色
+            colorpicker.render({
+                elem: '#colorchk-cylinder-outline'
+                , color: editGraphic.outlineColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    editGraphic.graphic.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.outlineAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showCylinderOutline)', function (data) {
+                let isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+                } else {
+                    $('.outline').hide();
+                }
+                editGraphic.setValue('outline', isShow);
+            });
+            if (editGraphic.getValue('outline')) {
+                $('#showCylinderOutline').next().click();
+                $('#showCylinderOutline').attr('value', 'on')
+            }
+        }
+
+        //球体属性
+        function ellipsoidProp() {
+            //半径
+            $('.ellipsoid input[name="radius"]').on('input propertychange', function (event) {
+                var value = $(this).val().replace(/[^\d\.]/g, '');
+                if (value === '' || value === '.') return;
+                if (editGraphic.setValue) {
+                    editGraphic.setValue('radius', parseFloat(value));
+                }
+            });
+
+            //填充色透明度
+            slider.render({
+                elem: '#opacity-ellipsoid-fill'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.alpha
+                , change: function (value) {
+                    editGraphic.alpha = value;
+                    editGraphic.setValue('alpha', value / 100);
+                }
+            });
+
+            //边框透明度
+            slider.render({
+                elem: '#opacity-ellipsoid-outline'
+                , min: 0 //最小值
+                , max: 100 //最大值
+                , value: editGraphic.outlineAlpha
+                , change: function (value) {
+                    editGraphic.outlineAlpha = value;
+                    editGraphic.setValue('outlineAlpha', value / 100);
+                }
+            });
+
+            //填充色
+            colorpicker.render({
+                elem: '#colorchk-ellipsoid-fill'
+                , color: editGraphic.fillColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.fillColor = color;
+                    editGraphic.graphic.material.color.setValue(new Cesium.Color.fromCssColorString(editGraphic.fillColor).withAlpha(editGraphic.alpha / 100));
+                }
+            });
+
+            //边框色
+            colorpicker.render({
+                elem: '#colorchk-ellipsoid-outline'
+                , color: editGraphic.outlineColor   //设置默认色
+                , done: function (color) {
+                    editGraphic.outlineColor = color;
+                    editGraphic.graphic.outlineColor.setValue(new Cesium.Color.fromCssColorString(editGraphic.outlineColor).withAlpha(editGraphic.outlineAlpha / 100));
+                }
+            });
+
+            //是否显示边框
+            form.on('switch(showEllipsoidOutline)', function (data) {
+                let isShow = this.checked;
+                if (isShow) {
+                    $('.outline').show();
+                } else {
+                    $('.outline').hide();
+                }
+                editGraphic.setValue('outline', isShow);
+            });
+            if (editGraphic.getValue('outline')) {
+                $('#showEllipsoidOutline').next().click();
+                $('#showEllipsoidOutline').attr('value', 'on')
+            }
+        }
+
+        function removeGraphic() {
+            if (editGraphic.entity) {
+                Viewer.entities.remove(editGraphic.entity);
+            }
+        }
+
+        function getFillColor(rgba) {
+            editGraphic.fillColor = colorHex('rgb(' + rgba.red * 255 + ',' + rgba.green * 255 + ',' + rgba.blue * 255 + ')');
+            editGraphic.alpha = rgba.alpha * 100;
+        }
+
+        function getOutlineColor(rgba) {
+            editGraphic.outlineColor = colorHex('rgb(' + rgba.red * 255 + ',' + rgba.green * 255 + ',' + rgba.blue * 255 + ')');
+            editGraphic.outlineAlpha = rgba.alpha * 100;
+        }
+
+        function colorHex(rgb) {
+            var _this = rgb;
+            var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+            if (/^(rgb|RGB)/.test(_this)) {
+                var str = _this.replace(/(rgb|RGB)*/g, "");
+                str = str.replace("(", "").replace(")", "");
+                var aColor = str.split(",");
+                var strHex = "#";
+                for (var i = 0; i < aColor.length; i++) {
+                    var hex = Number(aColor[i]).toString(16);
+                    hex = hex.length === 1 ? 0 + '' + hex : hex;// 保证每个rgb的值为2位
+                    if (hex === "0") {
+                        hex += hex;
+                    }
+                    strHex += hex;
+                }
+                if (strHex.length !== 7) {
+                    strHex = _this;
+                }
+                return strHex;
+            } else if (reg.test(_this)) {
+                var aNum = _this.replace(/#/, "").split("");
+                if (aNum.length === 6) {
+                    return _this;
+                } else if (aNum.length === 3) {
+                    var numHex = "#";
+                    for (var i = 0; i < aNum.length; i += 1) {
+                        numHex += (aNum[i] + aNum[i]);
+                    }
+                    return numHex;
+                }
+            } else {
+                return _this;
+            }
+        }
+
+        // 页面加载时滚动归0
+        window.addEventListener("load", function (event) {
+            sessionStorage.setItem('scrollTop', 0)
+        });
+
+        // 获取页面滚动高度
+        window.addEventListener('scroll', function () {
+            var p = document.documentElement.scrollTop
+            sessionStorage.setItem('scrollTop', p)
+        })
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,431 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>SmartEarth-SDK示例</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../css/prop_form.css">
+    <style>
+        html,
+        body,
+        .layui-prop {
+            height: 100% !important;
+        }
+
+        form {
+            width: 95%;
+        }
+
+        html {
+            overflow: hidden;
+        }
+
+        .layui-form-item {
+            width: 313px !important;
+            /* border: 1px #14e8de solid;
+            margin-bottom: 0px !important;
+            border-bottom: none; */
+        }
+
+        .layui-input {
+            background-color: #fff !important;
+            height: 30px;
+            margin-top: 5px;
+        }
+
+        .layui-form-label {
+            width: 125px !important;
+            /* padding: 11px 15px !important;
+            border-right: 1px #fff solid;
+            font-weight: bold !important;
+            font-size: 14px;
+            text-align: center; */
+        }
+
+        .layui-input-block {
+            width: 150px !important;
+            margin-left: 150px !important;
+        }
+
+        .mCSB_container {
+            margin-right: 17px !important;
+        }
+
+        legend {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        .layui-tab-title .layui-this:after {
+            border-bottom: 2px solid rgb(27, 83, 140) !important;
+        }
+
+        .layui-tab-content {
+            padding: 0 !important;
+        }
+
+        .layui-prop {
+            margin-left: 10px;
+            height: 550px !important;
+        }
+
+        .layui-form-item .line {
+            display: block;
+        }
+
+        .layui-form-item .wall {
+            display: none;
+        }
+
+        .bnt-box {
+            text-align: center;
+            height: 58px;
+            /*/ / border-bottom: 1 px #999 solid;*/
+        }
+
+        .bnt-box button {
+            margin-top: 10px;
+        }
+
+        .fly {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-prop">
+        <div class="bnt-box">
+            <button type="button" class="layui-btn layui-btn-normal" id="start">继续漫游</button>
+            <button type="button" class="layui-btn layui-btn-normal" id="stop" style="margin-left: 0;">暂停漫游</button>
+            <button type="button" class="layui-btn layui-btn-normal" id="exit">退出漫游</button>
+        </div>
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">路线名称</label>
+                <div class="layui-input-block" id="roadName" style="line-height: 38px;">
+
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">视角模式</label>
+                <div class="layui-input-block">
+                    <select id="sjms" name="sjms" lay-filter="sjms">
+                        <option value="0">跟随模型</option>
+                        <option value="1">第一人称视角</option>
+                        <option value="2">上帝视角</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item norline fly">
+                <label class="layui-form-label">飞行高度</label>
+                <div class="layui-input-block">
+                    <input id="cameraHeight" type="text" value="0" name="cameraHeight" lay-filter="cameraHeight"
+                        class="layui-input" onkeyup="value=value.replace(/[^\d\.\-]/g,'')">
+                </div>
+            </div>
+            <div class="layui-form-item norline fly notGod">
+                <label class="layui-form-label">飞行距离</label>
+                <div class="layui-input-block">
+                    <input id="cameraDistance" type="text" value="0" name="cameraDistance" lay-filter="cameraDistance"
+                        class="layui-input" onkeyup="value=value.replace(/[^\d\.\-]/g,'')">
+                </div>
+            </div>
+            <div class="layui-form-item norline fly notGod">
+                <label class="layui-form-label">俯仰角</label>
+                <div class="layui-input-block">
+                    <input id="pitch" type="text" value="0" name="pitch" lay-filter="pitch" class="layui-input"
+                        onkeyup="value=value.replace(/[^\d\.\-]/g,'')">
+                </div>
+            </div>
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">总长度</label>
+                <div class="layui-input-block" id="totalLen" style="line-height: 38px;">
+                </div>
+            </div>
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">已漫游长度</label>
+                <div class="layui-input-block" id="distanceTraveled" style="line-height: 38px;">
+                    0
+                </div>
+            </div>
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">总时长</label>
+                <div class="layui-input-block" id="totalTime" style="line-height: 38px;">
+                </div>
+            </div>
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">已漫游时间</label>
+                <div class="layui-input-block" id="time" style="line-height: 38px;">
+                    0
+                </div>
+            </div>
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">是否显示模型</label>
+                <div class="layui-input-block">
+                    <input id="showModel" type="checkbox" lay-skin="switch" lay-filter="showModel" value="off"
+                        lay-text="是|否">
+                </div>
+            </div>
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">是否显示路线</label>
+                <div class="layui-input-block">
+                    <input id="showLine" type="checkbox" lay-skin="switch" lay-filter="showLine" value="off"
+                        lay-text="是|否">
+                </div>
+            </div>
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">速度</label>
+                <div class="layui-input-block" id="sd" style="line-height: 38px;">
+                </div>
+            </div>
+            <!--            <div class="layui-form-item norline">
+                        <label class="layui-form-label">已漫游时间</label>
+                        <div class="layui-input-block">
+                            <input id="havenTime" type="text" value="" name="title" lay-verify="title" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>-->
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">经度</label>
+                <div class="layui-input-block" id="jd" style="line-height: 38px;">
+                </div>
+            </div>
+
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">纬度</label>
+                <div class="layui-input-block" id="wd" style="line-height: 38px;">
+                </div>
+            </div>
+
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">漫游高程</label>
+                <div class="layui-input-block" id="height" style="line-height: 38px;">
+                </div>
+            </div>
+            <div class="layui-form-item norline">
+                <label class="layui-form-label">地面高程</label>
+                <div class="layui-input-block" id="globeHeight" style="line-height: 38px;">
+                </div>
+            </div>
+            <!--        <div class="layui-form-item norline" style="border-bottom: 1px #fff solid;">-->
+            <!--            <label class="layui-form-label">离地距离</label>-->
+            <!--            <div class="layui-input-block">-->
+            <!--                <input id="ldjl" type="text" value="" name="title" lay-verify="title" autocomplete="off"-->
+            <!--                       class="layui-input">-->
+            <!--            </div>-->
+            <!--        </div>-->
+            <div class="layui-form-item">
+                <div class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="ratio">
+                    <div class="layui-progress-bar layui-bg-red" lay-percent="0%"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="../jquery-2.0.3.js"></script>
+    <script src="../layui/layui.js"></script>
+
+    <script>
+        /// <reference path="sjcs.js" />
+        var fly = null;
+        var sgworld = parent.sgworld;
+        var routeData = parent.PathAnimationData.selectRouteData;
+        var url = parent.SmartEarthRootUrl + "Workers/Model/xiaoche.gltf";
+        $('#start').hide();
+        $('#stop').show();
+        var form, element;
+        var ratio = 0;
+        layui.use(['form', 'element'], function () {
+            form = layui.form;
+            element = layui.element;
+
+            if (routeData.distance) {
+                document.getElementById("totalLen").innerText = getDistance(routeData.distance);
+            }
+            if (routeData.Totaltime) {
+                document.getElementById("totalTime").innerText = getTime(routeData.Totaltime);
+            }
+            if (routeData.range) {
+                document.getElementById("cameraDistance").value = routeData.range;
+            }
+            if (routeData.height) {
+                document.getElementById("cameraHeight").value = routeData.height;
+            }
+            if (routeData.pitch) {
+                document.getElementById("pitch").value = routeData.pitch;
+            }
+            document.getElementById("roadName").innerText = routeData.name;
+
+            fly = sgworld.Creator.createDynamicObject(routeData, routeData.url || url, shuj);
+            parent.PathAnimationData.selectRouteData.fly = fly;
+
+            if (routeData.mode) {
+                $('#sjms option[value="' + routeData.mode + '"]').attr('selected', '');
+                form.render();
+                switch (routeData.mode) {
+                    case 1:
+                        $('.fly').show();
+                        break;
+                    case 2:
+                        $('.fly').show();
+                        $('.notGod').hide();
+                        break;
+                }
+            }
+            form.on('select(sjms)', function (data) {
+                if (data.value === "0") {
+                    fly && fly.changeFlyMode(0);
+                    routeData && (routeData.mode = 0);
+                    $('.fly').hide();
+                } else if (data.value === "1") {
+                    fly && fly.changeFlyMode(1);
+                    routeData && (routeData.mode = 1);
+                    $('.fly').show();
+                } else if (data.value === "2") {
+                    fly && fly.changeFlyMode(2);
+                    routeData && (routeData.mode = 2);
+                    $('.fly').show();
+                    $('.notGod').hide();
+                }
+            });
+            $('#cameraDistance').on('input propertychange', function (event) {
+                var distance = $(this).val().replace(/[^\d\.\-]/g, '');
+                fly && fly.setFlyDistance(parseFloat(distance));
+                routeData && (routeData.range = parseFloat(distance));
+            });
+            $('#cameraHeight').on('input propertychange', function (event) {
+                var height = $(this).val().replace(/[^\d\.\-]/g, '');
+                fly && fly.setFlyHeight(parseFloat(height));
+                routeData && (routeData.height = parseFloat(height));
+            });
+            $('#pitch').on('input propertychange', function (event) {
+                var pitch = $(this).val().replace(/[^\d\.\-]/g, '');
+                fly && fly.setFlyPitch(parseFloat(pitch));
+                routeData && (routeData.pitch = parseFloat(pitch));
+            });
+            if (routeData.showModel) {
+                $('#showModel').next().click();
+                $('#showModel').attr('value', 'on');
+            }
+            form.on('switch(showModel)', function (data) {
+                fly && fly.showModel(this.checked);
+                routeData && (routeData.showModel = this.checked);
+            });
+            if (routeData.showLine) {
+                $('#showLine').next().click();
+                $('#showLine').attr('value', 'on');
+            }
+            form.on('switch(showLine)', function (data) {
+                fly && fly.showLine(this.checked);
+                routeData && (routeData.showLine = this.checked);
+            });
+            //进度条
+            setInterval(function () {
+                element.progress('ratio', ratio + '%');
+            }, 500);
+        });
+        //按钮事件
+        $(".bnt-box button").click(function () {
+            var id = this.id;
+            switch (id) {
+                case 'start':
+                    fly && fly.isPause(false);
+                    $('#start').hide();
+                    $('#stop').show();
+                    break;
+                case 'stop':
+                    fly && fly.isPause(true);
+                    $('#start').show();
+                    $('#stop').hide();
+                    break;
+                case 'exit':
+                    closeLayer();
+                    break;
+            }
+        });
+
+        function shuj(data) {
+            if (data.distanceTraveled) {
+                //已漫游长度
+                document.getElementById("distanceTraveled").innerText = getDistance(data.distanceTraveled);
+            }
+            if (data.time) {
+                //已漫游时间
+                document.getElementById("time").innerText = getTime(parseInt(data.time));
+            }
+            if (data.longitude) {
+                //经度
+                document.getElementById("jd").innerText = data.longitude.toFixed(7) + '°';
+            }
+            if (data.latitude) {
+                //纬度
+                document.getElementById("wd").innerText = data.latitude.toFixed(7) + '°';
+            }
+            if (data.speed) {
+                //速度
+                document.getElementById("sd").innerText = data.speed;
+            }
+            if (data.height) {
+                //速度
+                document.getElementById("height").innerText = getDistance(data.height);
+            }
+            if (data.globeHeight) {
+                //速度
+                document.getElementById("globeHeight").innerText = getDistance(data.globeHeight);
+            }
+            if (data.ratio) {
+                ratio = parseInt(data.ratio * 100);
+            }
+        }
+
+        //自动点击关闭窗口点关闭事件
+        function closeLayer() {
+            var $title = $(window.parent.document).find('.layui-layer-title');
+            if ($title.length > 0) {
+                $title.each(function (i, item) {
+                    if (item.innerHTML === "漫游路线") {
+                        var closeButton = $(item).parent().find('.layui-layer-close');
+                        var event = document.createEvent('MouseEvents');
+                        event.initEvent("click", false, true);
+                        closeButton[0].dispatchEvent(event);
+                    }
+                })
+            }
+        }
+
+        function getTime(data) {
+            var time;
+            if (data < 60) {
+                time = data + "秒";
+            } else if (data >= 60 && data < 3600) {
+                time = Math.floor(data / 60) + '分' + data % 60 + '秒';
+            } else {
+                var h = Math.floor(data / 3600);
+                data -= h * 3600;
+                var m = Math.floor(data / 60);
+                data -= m * 60;
+                time = h + '小时' + m + '分' + data + '秒';
+            }
+            return time;
+        }
+
+        function getDistance(data) {
+            var dis;
+            data = parseFloat(data).toFixed(2);
+            data = parseFloat(data);
+            if (data >= 1000) {
+                dis = (data / 1000).toFixed(3) + "千米";
+            } else {
+                dis = data + "米";
+            }
+            return dis;
+        }
+    </script>
+</body>
+
+</html>

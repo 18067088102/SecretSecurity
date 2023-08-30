@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>路径动画</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        .bnt-box {
+            width: 90%;
+            margin: auto;
+            height: 58px;
+            text-align: center;
+        }
+
+        .bnt-box button {
+            margin-top: 10px;
+        }
+
+        .tab {
+            width: 90%;
+            margin: auto;
+        }
+
+        .layui-table-page {
+            margin-top: 10px !important;
+            border: none !important;
+        }
+
+        .layui-form {
+            border: none !important;
+        }
+
+        .layui-form-label {
+            font-weight: bold !important;
+            font-size: 15px;
+        }
+
+        .layui-laypage-skip {
+            display: none !important;
+        }
+
+        .layui-laypage-limits {
+            display: none !important;
+        }
+
+        .layui-layer-setwin .layui-layer-close1 {
+            background-position: 0, 0 !important;
+        }
+
+        .layui-layer-ico {
+            background-image: url(../layui/lay/modules/theme/default/1.png) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bnt-box">
+        <button type="button" class="layui-btn layui-btn-normal" id="newRoad">新增路线</button>
+        <!--    <button type="button" class="layui-btn layui-btn-normal" id="saveRoad">保存路线</button>-->
+    </div>
+    <div class="tab">
+        <table lay-filter="bro" class="layui-hide" id="broTable"></table>
+    </div>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">浏览</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <script src="../jquery-2.0.3.js"></script>
+    <script src="../layui/layui.js"></script>
+    <script>
+        /// <reference path="sjcs.js" />
+        layui.use(['form', 'layer', 'table'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+            var table = layui.table;
+            var parentLayer = parent.layer;
+            var sgworld = parent.sgworld;
+            var idIndex = 1;
+            var thisLayer = null;
+            //存储漫游路线数据
+            if (!parent.PathAnimationData) {
+                parent.PathAnimationData = {
+                    tData: [{
+                        'id': "test",
+                        "name": "测试",
+                        "Totaltime": 30,
+                        "distance": "5400", //总长度
+                        "showPoint": false, //显示点
+                        "showLine": true, //显示线
+                        "showModel": true, //显示模型
+                        "isLoop": false, //是否循环
+                        "height": 50, //飞行高度
+                        "pitch": -20, //俯仰角
+                        "range": 10, //距离模型距离
+                        'geojson': {
+                            // orientation: {heading: 0.07372076173362352, pitch: -1.5574628887292024, roll: 0},
+                            // position: {x: -2205629.231433604, y: 5509184.64306962, z: 2331219.615547844},
+                            geometry: {
+                                type: "LineString",
+                                coordinates: [
+                                    [111.8181532375421, 21.57868178213224],
+                                    [111.81835028960268, 21.578460581633188],
+                                    [111.81832383076255, 21.57812489081727],
+                                    [111.81847943987464, 21.577930686377922],
+                                    [111.81878489838651, 21.57765953027421],
+                                    [111.81916083936886, 21.577412646930927],
+                                    [111.81958489944898, 21.57729241143278],
+                                    [111.82004766614196, 21.57718315464893],
+                                    [111.8206409631356, 21.577000552080584],
+                                    [111.82134398589339, 21.576873639989994],
+                                    [111.8219423400026, 21.576726154070943],
+                                    [111.822467537162, 21.576376210912294],
+                                    [111.82307030263561, 21.576058642812292],
+                                    [111.8237103973151, 21.5756704298083],
+                                    [111.8240924390803, 21.575296152837485],
+                                    [111.82504071801145, 21.575766169089448],
+                                    [111.82603850185104, 21.576124273877287],
+                                    [111.82694738799758, 21.576428149353344],
+                                    [111.82754018969692, 21.576728981595224],
+                                    [111.828099605676, 21.57697046673728],
+                                    [111.82845968318266, 21.577307788777407],
+                                    [111.8287111214647, 21.577998110617774],
+                                    [111.82881328135024, 21.578557636789135],
+                                    [111.82905095574245, 21.57877846306897],
+                                    [111.82918966895863, 21.579074053131905],
+                                    [111.82928422024466, 21.579329257594996],
+                                    [111.82930019172734, 21.579630618390876],
+                                    [111.82966603969574, 21.580020790142015],
+                                    [111.82960868244719, 21.580744679418963],
+                                    [111.82989219533579, 21.581251462292837],
+                                    [111.83013608532544, 21.582236343172],
+                                    [111.83037855800974, 21.58254231013029],
+                                    [111.83032824715998, 21.58299431932842],
+                                    [111.83001717858694, 21.583468817164515],
+                                    [111.8299185766154, 21.584290601587544],
+                                    [111.82948276544901, 21.58496623602712],
+                                    [111.8289749235787, 21.58556878427974],
+                                    [111.82886305199469, 21.585776309810406],
+                                    [111.8287779821505, 21.585946333271792],
+                                    [111.82865496967007, 21.586265136888645],
+                                    [111.82847674720864, 21.586438092096014],
+                                    [111.82845974740698, 21.586567373767977],
+                                    [111.828355170664, 21.586736247366822],
+                                    [111.82830843296874, 21.586863152790087],
+                                    [111.82825365102633, 21.58710380271154],
+                                    [111.82821734971404, 21.587138762444976],
+                                    [111.82817916952548, 21.587294814193356],
+                                    [111.82787759367034, 21.587314539280754],
+                                    [111.82719468513524, 21.587237821164194],
+                                    [111.82672929414602, 21.58716013804561],
+                                    [111.82658494057793, 21.587131014021804],
+                                    [111.82652478882481, 21.587094797111455],
+                                    [111.82647814913857, 21.58694770659332],
+                                    [111.82649812273736, 21.58651375697629],
+                                    [111.82650209141173, 21.586517166652694],
+                                    [111.82650209141173, 21.586517166652694]
+                                ]
+                            }
+                        }
+                    }]
+                };
+            }
+            var tData = parent.PathAnimationData.tData;
+            var thisTable = table.render({
+                elem: '#broTable',
+                cols: [
+                    [ //标题栏
+                        {
+                            field: 'name',
+                            title: '名称',
+                            width: 100,
+                            edit: "text"
+                        }, {
+                            fixed: 'right',
+                            width: 212,
+                            align: 'center',
+                            toolbar: '#barDemo',
+                            title: '操作'
+                        }
+                    ]
+                ],
+                data: tData,
+                id: 'road',
+                page: true //是否显示分页
+                    ,
+                height: 280,
+                limit: 5 //每页默认显示的数量
+            });
+            reloadRoadData();
+
+            //监听单元格编辑
+            table.on('edit(bro)', function (obj) {
+                var value = obj.value //得到修改后的值
+                    ,
+                    data = obj.data //得到所在行所有键值
+                    ,
+                    field = obj.field; //得到字段
+
+                update(data);
+            });
+            //监听工具条
+            table.on('tool(bro)', function (obj) {
+                console.log(parent.PathAnimationData);
+                var data = obj.data;
+                if (obj.event === 'detail') {
+                    parent.PathAnimationData.selectRouteData = data;
+                    layerShowOfHide(false);
+                    parentLayerOpen({
+                        id: 'flyRoad',
+                        name: '漫游路线',
+                        url: parent.window.SmartEarthRootUrl +
+                            'Workers/path/PathAnimationSec.html',
+                        height: 690,
+                        top: '120px'
+                    }, function () {
+                        layerShowOfHide(true);
+                        parent.PathAnimationData.selectRouteData.fly && parent.PathAnimationData
+                            .selectRouteData.fly.exit();
+                        parent.PathAnimationData.selectRouteData = null;
+                    });
+                } else if (obj.event === 'del') {
+                    parentLayer.confirm('确定删除线路？', function (index) {
+                        obj.del();
+                        deleteData(data);
+                        parentLayer.close(index);
+                    });
+                } else if (obj.event === 'edit') {
+                    parent.PathAnimationData.selectRouteData = data;
+                    layerShowOfHide(false);
+                    parentLayerOpen({
+                        id: 'editFlyRoad',
+                        name: '路线编辑',
+                        url: parent.window.SmartEarthRootUrl +
+                            'Workers/path/PathAnimationEdit.html',
+                        height: 510
+                    }, function () {
+                        layerShowOfHide(true);
+                        update(parent.PathAnimationData.selectRouteData);
+                        parent.PathAnimationData.selectRouteData = undefined;
+                        parent.PathAnimationData.showLine && parent.Viewer.entities.remove(
+                            parent.PathAnimationData.showLine);
+                        parent.PathAnimationData.showLine = undefined;
+                        
+
+                    });
+                }
+
+            });
+
+
+            //重载表格
+            function reloadRoadData() {
+                var pageContainer = $('.layui-laypage-em').siblings();
+                var pageNum = parseInt(pageContainer.html());
+                if (!thisTable) return;
+
+                var data = Array.from(tData);
+                //执行重载
+                thisTable.reload({
+                    page: {
+                        curr: pageNum //重新从第 1 页开始
+                    },
+                    data: data
+                });
+            }
+
+            function update(data) {
+                try {
+                    tData.forEach(function (item) {
+                        if (item.id === data.id) {
+                            for (let key in data) {
+                                item[key] = data[key];
+                            }
+                            throw new Error('successUpdate');
+                        }
+                    });
+                } catch (e) {
+
+                }
+                reloadRoadData();
+            }
+
+            function deleteData(data) {
+                var index = -1;
+                try {
+                    tData.forEach(function (item, i) {
+                        if (item.id === data.id) {
+                            index = i;
+                            throw new Error('successDelete');
+                        }
+                    });
+                } catch (e) {
+                    if (e.message === 'successDelete') {
+                        tData.splice(index, 1);
+                    }
+                }
+                reloadRoadData();
+            }
+
+            $("#newRoad").click(function () {
+                //绘制飞行路线
+                sgworld.Command.execute(2, 3, "", function (data) {
+                    data.name = '新建路线';
+                    tData.push(data);
+                    reloadRoadData();
+                });
+            });
+
+            function parentLayerOpen(option, callback) {
+                if (parent.isPhone) {
+                    layer.closeAll();
+                    parentLayer.open({
+                        skin: 'layerPhoneCss',
+                        type: 2,
+                        title: option.name,
+                        area: ['100%', '100px'],
+                        fixed: false, //不固定
+                        shadeClose: false,
+                        shade: 0,
+                        offset: 'b',
+                        resize: false,
+                        content: option.url,
+                        anim: 2,
+                        cancel: function () {
+                            (typeof callback === "function") && callback();
+                        },
+                        success: function (obj) {}
+                    });
+                    return;
+                }
+
+                var height = option.height || '400';
+                var width = option.width || '352';
+
+                parentLayer.open({
+                    skin: 'other-class',
+                    type: 2,
+                    title: option.name,
+                    area: [width + 'px', height + 'px'],
+                    fixed: false, //不固定
+                    shadeClose: false,
+                    shade: 0,
+                    offset: 'r',
+                    content: option.url,
+                    cancel: function () {
+                        (typeof callback === "function") && callback();
+                    },
+                    success: function (obj) {
+
+                    }
+                });
+            }
+
+            //随机id
+            function createRandomId() {
+                return (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() +
+                    '-' + Math.random().toString().substr(2, 5);
+            }
+
+            //窗口显示/隐藏
+            function layerShowOfHide(isShow) {
+                if (thisLayer) {
+                    isShow ? thisLayer.show() : thisLayer.hide();
+                } else {
+                    var $title = $(window.parent.document).find('.layui-layer-title');
+                    if ($title.length > 0) {
+                        $title.each(function (i, item) {
+                            if (item.innerHTML === "路径动画") {
+                                thisLayer = $(item).parent();
+                                isShow ? thisLayer.show() : thisLayer.hide();
+                            }
+                        })
+                    }
+                }
+            }
+        });
+    </script>
+</body>

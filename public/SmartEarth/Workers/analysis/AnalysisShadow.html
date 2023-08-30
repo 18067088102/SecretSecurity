@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>阴影分析</title>
+    <link href="../layui/css/layui.css" rel="stylesheet" />
+    <style>
+        html {
+            overflow: hidden;
+            height: 100%;
+        }
+        .dateBox label{
+            color: white;
+        }
+        .bnt-box {
+            width: 90%;
+            margin: auto;
+            height: 58px;
+            border-bottom: 1px #999 solid;
+        }
+
+        .layui-input {
+            background-color: #fff !important;
+            width: 203px
+        }
+
+        .layui-form-label {
+            font-weight: bold !important;
+            font-size: 15px;
+        }
+        .layui-btn{
+            background-color: rgba(0, 168, 255, 0.16) !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dateBox">
+        <div class="layui-inline" style="margin-top: 15px">
+            <label class="layui-form-label">日期选择</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="date" placeholder="yyyy-MM-dd">
+            </div>
+        </div>
+        <div class="layui-inline" style="margin-top: 15px">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="startTime" placeholder="HH:mm:ss">
+            </div>
+        </div>
+        <div class="layui-inline" style="margin-top: 15px">
+            <label class="layui-form-label">结束时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="endTime" placeholder="HH:mm:ss">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-top: 15px">
+            <label class="layui-form-label" style="font-weight: bold">播放时间</label>
+            <div class="layui-input-inline">
+                <input id='speed' type="number" lay-verify="pass" value="20" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button type="button" class="layui-btn layui-btn-normal play" title="播放" style="margin-left: 35px;padding: 0 50px;">
+                <!-- <i class="layui-icon">&#xe652;</i> -->
+                播放
+            </button>
+            <button type="button" class="layui-btn layui-btn-normal stop" title="暂停" style="margin-left: 17px;padding: 0 50px;">
+                <!-- <i class="layui-icon">&#xe651;</i> -->
+                暂停
+            </button>
+        </div>
+
+    </div>
+
+    <script src="../jquery-2.0.3.js"></script>
+    <script src="../layui/layui.js"></script>
+    <!-- <script src="./js/AnalysisShadow.js"></script> -->
+    <script>
+        $(function () {
+            layui.use(['element', 'form', 'laydate'], function () {
+                var $ = layui.jquery
+                    , element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+                var form = layui.form;
+                var laydate = layui.laydate;
+                var sgworld = parent.sgworld;
+                var Viewer = parent.Viewer;
+                var Cesium = parent.Cesium;
+                var layer = parent.layer;
+
+                sgworld._Viewer.shadows = true;
+                Viewer.clock.clockRange = 2;
+                sgworld.Command.execute(3, 3);
+
+                let date = new Date();
+                date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+                let startTime = '10:00:00', stopTime = '18:00:00';
+                let num = 20, speed = 1440;
+
+                let isPlay = false;
+                let isStop = false;
+
+                startAnalyse();
+
+                laydate.render({
+                    elem: '#date'
+                    , format: 'yyyy-MM-dd'
+                    , value: new Date()
+                    , done: function (value, _date, endDate) {
+                        date = value;
+                        isPlay = false;
+                    }
+                });
+                laydate.render({
+                    elem: '#startTime'
+                    , format: 'HH:mm:ss'
+                    , type: 'time'
+                    , value: '10:00:00'
+                    , done: function (value, _date, endDate) {
+                        let sNum = new Date(date + ' ' + value).getTime() / 1000;
+                        let eNum = new Date(date + ' ' + stopTime).getTime() / 1000;
+                        if (sNum > eNum) {
+                            layer.msg('开始时间大于结束时间，请重新选择');
+                            return;
+                        }
+                        startTime = value;
+                        speed = (eNum - sNum) / num;
+                        isPlay = false;
+                    }
+                });
+                laydate.render({
+                    elem: '#endTime'
+                    , format: 'HH:mm:ss'
+                    , value: '18:00:00'
+                    , type: 'time'
+                    , done: function (value, _date, endDate) {
+                        let sNum = new Date(date + ' ' + startTime).getTime() / 1000;
+                        let eNum = new Date(date + ' ' + value).getTime() / 1000;
+                        if (sNum > eNum) {
+                            layer.msg('开始时间大于结束时间，请重新选择');
+                            return;
+                        }
+                        stopTime = value;
+                        speed = (eNum - sNum) / num;
+                        isPlay = false;
+                    }
+                });
+
+                $('.play').click(function () {
+                    if (isPlay) {
+                        isStop = false;
+                    } else {
+                        startAnalyse();
+                    }
+                    sgworld.Command.execute(3, 3);
+                })
+                $('.stop').click(function () {
+                    if (!isStop && isPlay) {
+                        sgworld.Command.execute(3, 5);
+                        isStop = true;
+                    }
+                });
+                $('#speed').on('input propertychange', function (event) {
+                    let value = parseFloat(this.value);
+                    if (!isNaN(value)) {
+                        num = value;
+
+                        let sNum = new Date(date + ' ' + startTime).getTime() / 1000;
+                        let eNum = new Date(date + ' ' + stopTime).getTime() / 1000;
+
+                        speed = (eNum - sNum) / num;
+                        isPlay = false;
+                    }
+                })
+
+                function startAnalyse() {
+                    let start = new Date(date + ' ' + startTime);
+                    Viewer.clock.startTime = Cesium.JulianDate.fromDate(start);
+                    Viewer.clock.currentTime = Cesium.JulianDate.fromDate(start);
+                    let end = new Date(date + ' ' + stopTime);
+                    Viewer.clock.stopTime = Cesium.JulianDate.fromDate(end);
+                    Viewer.clock.multiplier = speed;
+                    isPlay = true;
+                }
+            });
+        })
+    </script>
+</body>
+
+</html>

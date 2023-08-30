@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>地形剖面分析</title>
+    <style>
+        html,
+        body,
+        #myChart {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myChart"></div>
+    <script src="../jquery-2.0.3.js"></script>
+    <script src="../echarts.min.js"></script>
+    <script>
+        let analyseData = parent.AnalysisDXPM && parent.AnalysisDXPM.analyseData;
+        if (analyseData) {
+            showChar(analyseData);
+        }
+        function showChar(distance) {
+            var distacnelist = [];
+            var fristdistance = 0;
+            var totaldistance = (parseFloat(distance.distance) / distance.cys).toFixed(1);
+            var cs = parseInt(distance.cys);
+            var allPoint = distance.allPoint;
+            for (var i = 0; i < cs; i++) {
+                if (i == 0) {
+                    var nextdistance = fristdistance;
+                    fristdistance = nextdistance;
+                    distacnelist.push(parseFloat(nextdistance).toFixed(1));
+                } else {
+                    var nextdistance = fristdistance + parseFloat(totaldistance);
+                    fristdistance = nextdistance;
+                    distacnelist.push(parseFloat(nextdistance).toFixed(1));
+                }
+            }
+            var myChart = echarts.init(document.getElementById('myChart'));
+            option = {
+                grid: {
+                    left: '40px',
+                    right: '40px',
+                    bottom: '20px',
+                    top: '20px',
+                    containLabel: true
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (a) {
+                        var relVal = "";
+                        relVal = "距起点：" + a[0].name + "米<br/>";
+                        relVal += "海拔高度为：" + a[0].value + "米";
+                        return relVal;
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: distacnelist,
+                    axisLabel: {
+                        show: true,
+                        textStyle: {
+                            color: '#ffffff',  //更改坐标轴文字颜色
+                        }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        show: true,
+                        textStyle: {
+                            color: '#ffffff',  //更改坐标轴文字颜色
+                        }
+                    }
+                },
+                series: [{
+                    data: distance.gcs,
+                    type: 'line',
+                    areaStyle: {}
+                }]
+            };
+            myChart.setOption(option);
+            myChart.on('click', function (params) {
+                let thisP = allPoint[params.dataIndex] && allPoint[params.dataIndex].clone();
+                parent.addDXPMFlyPoint(parent.Cesium.Cartographic.toCartesian(thisP));
+
+                thisP.height += 360;
+                thisP = parent.Cesium.Cartographic.toCartesian(thisP);
+                var options = {
+                    maximumHeight: 30,
+                    offset: new parent.Cesium.HeadingPitchRange(
+                        parent.sgworld.Viewer.camera.heading,
+                        -90,
+                        1000
+                    ),
+                };
+                parent.sgworld.Viewer.flyTo(parent.AnalysisDXPM.flyPoint, options);
+            });
+        }
+    </script>
+</body>
+
+</html>
