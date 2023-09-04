@@ -1,29 +1,28 @@
 <template>
   <div class="full-box">
+    <!-- 倾斜摄影底图 -->
     <div id="sdkContainer"></div>
     <div :style="{ zoom: zoomScale }">
+      <!-- 上边 -->
       <div class="top-bg"></div>
+      <!-- 下边 -->
       <div class="bottom-bg">
         <div :class="[currentIndex === 1 ? 'gzrh-btn-s' : 'gzrh-btn-c']" class="cp" @click="onSelectIndex(1)"></div>
         <div :class="[currentIndex === 2 ? 'tszl-btn-s' : 'tszl-btn-c']" class="cp" @click="onSelectIndex(2)"></div>
         <div :class="[currentIndex === 3 ? 'zhdd-btn-s' : 'zhdd-btn-c']" class="cp" @click="onSelectIndex(3)"></div>
         <div :class="[currentIndex === 4 ? 'rcfk-btn-s' : 'rcfk-btn-c']" class="cp" @click="onSelectIndex(4)"></div>
       </div>
-      <aside-left ref="left" :currentIndex="currentIndex" @createPoint="createPoint" @createLine="createLine"
-        @createCircle="createCircle" @createPolygon="createPolygon" :yalxSelectIndex="yalxSelectIndex"
-        @checkZBJLType="onCheckZBJLType($event)" @checkZDJLYSType="onCheckZDJLYSType($event)"
-        @checkSPJKType="onCheckSPJKType($event)" @selectPoint="selectPoint($event)" @addDBH="addDBH" @addXBH="addXBH"
-        @addMBH="addMBH($event)" @addTBH="addTBH" @addJYBH="addJYBH($event)" @addXLMY="addXLMY" @addDDRF="addDDRF"
-        @addSJSD="addSJSD"></aside-left>
-      <aside-right ref="right" :currentIndex="currentIndex" :yalxSelectIndex="yalxSelectIndex" @showPOI="onShowPOI"
-        @showSPJK="onShowSPJK" @showWLSB="onShowWLSB" @showSearchBox="onShowSearchBox" @showAlert="onShowAlert($event)"
-        @showFault="onShowFault($event)" @showYABH="onShowYABH($event)" @viewAddYABH="onViewAddYABH($event)"
-        @delAddYABH="onDelAddYABH($event)" @showCJXX="onShowCJXX($event)" @clearAll="onClearAll"></aside-right>
-
+      <!-- 左边 -->
+      <aside-left ref="left" :currentIndex="currentIndex" :yalxSelectIndex="yalxSelectIndex"></aside-left>
+      <!-- 右边 -->
+      <aside-right ref="right" :currentIndex="currentIndex" :yalxSelectIndex="yalxSelectIndex"
+        @showSearchBox="onShowSearchBox"></aside-right>
+      <!-- 搜索框 -->
       <div class="search-box flex-row" v-if="showSearchBox">
         <el-input style="width: calc(100% - 50px)" v-model="keyword" clearable placeholder="请输入你想搜索的内容"></el-input>
         <div class="search-btn cp"></div>
       </div>
+      <!-- 日常防控预案类型 -->
       <div class="yalx-box" v-if="showYALX">
         <div :class="[yalxSelectIndex === 1 ? 'yazl-btn-s' : 'yazl-btn', 'cp']" style="margin-right: 27px"
           @click="onYazlSelect(1)"></div>
@@ -34,6 +33,7 @@
         <div :class="[yalxSelectIndex === 4 ? 'fhqgl-btn-s' : 'fhqgl-btn', 'cp']" @click="onYazlSelect(4)"></div>
       </div>
     </div>
+    <!-- poi面板 -->
     <div :style="{ zoom: zoomScale }" class="poi-board" v-if="showPOI">
       <div class="poi-head flex-sb">
         <span class="head-text">POI信息</span>
@@ -45,6 +45,7 @@
         </el-tree>
       </div>
     </div>
+    <!-- 物联设备面板 -->
     <div :style="{ zoom: zoomScale }" class="wlsb-board" v-if="showWLSB">
       <div class="wlsb-head flex-sb">
         <span class="head-text">物联设备</span>
@@ -716,6 +717,12 @@ export default {
       this.showYALX = isAddYA ? false : true;
       this.onClearAll();
     });
+    bus.$on("showAlert", (data) => {
+      this.onShowAlert(data);
+    });
+    bus.$on("showFault", (data) => {
+      this.onShowFault(data);
+    });
     bus.$on("updateCurrentYAInfo", (info) => {
       Viewer.entities.removeAll();
       if (info.currentYAInfo.plotInfo) {
@@ -836,6 +843,23 @@ export default {
             });
           }
         });
+      }
+    });
+    // 左侧工具按钮
+    bus.$on("searchBuilding", (data) => {
+      this.getBuildingList(data);
+      this.getBuildingDeviceList(data);
+    });
+    // 右侧工具按钮
+    bus.$on("showDialog", (idx) => {
+      if (idx === 0) {
+        this.onShowPOI();
+      } else if (idx === 1) {
+        this.onShowSPJK();
+      } else if (idx === 2) {
+        this.onShowWLSB();
+      } else if (idx === 3) {
+        this.onClearAll();
       }
     });
   },
@@ -2036,88 +2060,6 @@ export default {
       this.webVideo.clickFullScreen();
     },
 
-    // 绘制工具
-    createPoint() {
-      sgworld.Creator.createSimpleGraphic("point", {}, (entity) => {
-        let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-        let degrees = SmartEarth.Cartesian3_to_WGS84(obj.position);
-        let coordinates = [];
-        let dic = {
-          lng: degrees.lon,
-          lat: degrees.lat,
-        };
-        coordinates.push(dic);
-        let data = {
-          id: obj.id,
-          type: 1,
-          coordinates,
-        };
-        this.getBuildingList(data);
-        this.getBuildingDeviceList(data);
-      });
-    },
-    createLine() {
-      sgworld.Creator.createSimpleGraphic("polyline", {}, (entity) => {
-        let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-        let coordinates = [];
-        obj.positions.forEach((item) => {
-          let degrees = SmartEarth.Cartesian3_to_WGS84(item);
-          let dic = {
-            lng: degrees.lon,
-            lat: degrees.lat,
-          };
-          coordinates.push(dic);
-        });
-        let data = {
-          id: obj.id,
-          type: 2,
-          coordinates,
-        };
-        this.getBuildingList(data);
-        this.getBuildingDeviceList(data);
-      });
-    },
-    createCircle() {
-      sgworld.Creator.createSimpleGraphic("circle", {}, (entity) => {
-        let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-        let degrees = SmartEarth.Cartesian3_to_WGS84(obj.position);
-        let coordinates = [];
-        let dic = {
-          lng: degrees.lon,
-          lat: degrees.lat,
-        };
-        coordinates.push(dic);
-        let data = {
-          id: obj.id,
-          type: 3,
-          coordinates,
-          radius: obj.radius,
-        };
-        this.getBuildingList(data);
-        this.getBuildingDeviceList(data);
-      });
-    },
-    createPolygon() {
-      sgworld.Creator.createSimpleGraphic("polygon", {}, (entity) => {
-        let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-        let coordinates = [];
-        obj.positions.forEach((item) => {
-          let degrees = SmartEarth.Cartesian3_to_WGS84(item);
-          let dic = {
-            lng: degrees.lon,
-            lat: degrees.lat,
-          };
-          coordinates.push(dic);
-        });
-        let data = {
-          id: obj.id,
-          type: 4,
-          coordinates,
-        };
-        this.getBuildingList(data);
-        this.getBuildingDeviceList(data);
-      });
-    },
     // 获取建筑统计信息
     getBuildingList(data) {
       getBuildingList(data).then((response) => {
@@ -2191,578 +2133,15 @@ export default {
     onYazlSelect(idx) {
       this.yalxSelectIndex = idx;
     },
-    onShowYABH(item) {
-      // console.log(item);
-      sgworld.Navigate.setPosition(
-        item.coordinates[0].lon,
-        item.coordinates[0].lat,
-        8000
-      );
-    },
-    onViewAddYABH(item) {
-      // console.log(item);
-      sgworld.Navigate.setPosition(
-        item.coordinates[0].lon,
-        item.coordinates[0].lat,
-        8000
-      );
-    },
-    onDelAddYABH(item) {
-      // console.log(item, Viewer.entities);
-      Viewer.entities.removeById(item.id);
-      if (item.idx === 0) {
-        this.$refs.left.startLonLat = "";
-      } else if (item.idx === 1) {
-        this.$refs.left.endLonLat = "";
-      }
-    },
-    onShowCJXX(item) {
-      // console.log(item);
-      sgworld.Navigate.setPosition(117.44917791230931, 31.87409363277426, 2000);
-      switch (item.idx) {
-        case 1:
-          let degreesArr = [];
-          item.geojson.geometry.coordinates.forEach((ele) => {
-            degreesArr.push(...ele);
-          });
-          // console.log(degreesArr);
-          sgworld.Creator.getFlyData(degreesArr, (data) => {
-            data.showPoint = false;
-            data.showLine = true;
-            data.speed = 5;
-            data.height = item.height;
-            data.mode = 1;
-            window.PathAnimationData = {
-              flyData: data,
-            };
-            window.PathAnimationData.winIndex = layer.open({
-              type: 2,
-              title: "路径动画",
-              shade: false,
-              area: ["352px", "690px"],
-              offset: "r",
-              skin: "other-class",
-              content: SmartEarthRootUrl + "Workers/path/Path.html",
-              success: (layero, index) => {
-                let iframeWin = window[layero.find('iframe')[0]['name']];
-                this.timer = setInterval(() => {
-                  let totalLenText = iframeWin.document.getElementById('totalLen').innerText;
-                  let traveledText = iframeWin.document.getElementById('distanceTraveled').innerText;
-                  let totalLen = totalLenText.indexOf('千米') !== -1 ? parseFloat(totalLenText.split('千米')[0]) * 1000 : parseFloat(totalLenText.split('米')[0]);
-                  let traveled = traveledText.indexOf('千米') !== -1 ? parseFloat(traveledText.split('千米')[0]) * 1000 : parseFloat(traveledText.split('米')[0]);
-                  // console.log("totalLen===" + totalLen, "traveled===" + traveled);
-                  if (traveled === totalLen) {
-                    //已漫游全程结束
-                    clearInterval(this.timer);
-                  }
-                  if (traveled !== this.distanceTraveled) {
-                    this.distanceTraveled = traveled;
-                    this.imLon = parseFloat(iframeWin.document.getElementById('jd').innerText.split('°')[0]).toFixed(7);
-                    this.imLat = parseFloat(iframeWin.document.getElementById('wd').innerText.split('°')[0]).toFixed(7);
-                    //拿到实时变化的经纬度去做操作 do something
-                    for (let i = 0; i < this.videoList.length; i++) {
-                      let item = this.videoList[i];
-                      let dis = this.getDistance(this.imLat, this.imLon, item.latitude, item.longitude);
-                      // console.log("dis---" + dis);
-                      if (dis <= 20) {
-                        //20米范围内点位视频
-                        this.getVideoDeviceInfo(item.id);
-                      }
-                    }
-                  }
-                  // console.log("imLon===" + this.imLon, "imLat===" + this.imLat);
-                }, 1000);
-              },
-              end: () => {
-                clearInterval(this.timer);
-                PathAnimationData.fly && PathAnimationData.fly.exit();
-              },
-            });
-          });
-          break;
-        case 2:
-          sgworld.Analysis.setPointFly({
-            time: 8,
-            position: Cesium.Cartesian3.fromDegrees(
-              item.lon,
-              item.lat,
-              item.height
-            ),
-            limitTime: true,
-          });
-          break;
-
-        default:
-          break;
-      }
-    },
-    getDistance(lat1, lon1, lat2, lon2) {
-      let radLat1 = (lat1 * Math.PI) / 180; //将角度换算为弧度
-      let radLat2 = (lat2 * Math.PI) / 180; //将角度换算为弧度
-      let a = radLat1 - radLat2;
-      let b = (lon1 * Math.PI) / 180 - (lon2 * Math.PI) / 180;
-      let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
-      s = s * 6378137.0; // 取WGS84标准参考椭球中的地球长半径(单位:m)
-      //s = Math.round(s * 10000) / 10000; //两点之间距离(保留四位)
-      return Math.round(s); //(单位:m)
-    },
-
-    // onCheckZBJLType(item) {
-    //   sgworld.Navigate.setPosition(117.44917791230931, 31.87409363277426, 2000);
-    //   switch (item.type) {
-    //     case 1:
-    //       if (item.checked) {
-    //         this.mjLayer = this.createLayer(item, "icon-mj");
-    //       } else {
-    //         this.mjLayer.clear();
-    //       }
-    //       break;
-    //     case 2:
-    //       if (item.checked) {
-    //         this.fjLayer = this.createLayer(item, "icon-fj");
-    //       } else {
-    //         this.fjLayer.clear();
-    //       }
-    //       break;
-    //     case 3:
-    //       if (item.checked) {
-    //         this.jcLayer = this.createLayer(item, "icon-jc");
-    //       } else {
-    //         this.jcLayer.clear();
-    //       }
-    //       break;
-    //     case 4:
-    //       if (item.checked) {
-    //         this.ptuLayer = this.createLayer(item, "icon-ptu");
-    //       } else {
-    //         this.ptuLayer.clear();
-    //       }
-    //       break;
-    //     case 5:
-    //       if (item.checked) {
-    //         this.wrjLayer = this.createLayer(item, "icon-wrj");
-    //       } else {
-    //         this.wrjLayer.clear();
-    //       }
-    //       break;
-    //     case 6:
-    //       if (item.checked) {
-    //         this.jqrLayer = this.createLayer(item, "icon-jqr");
-    //       } else {
-    //         this.jqrLayer.clear();
-    //       }
-    //       break;
-
-    //     default:
-    //       break;
-    //   }
-    // },
-    // onCheckZDJLYSType(item) {
-    //   sgworld.Navigate.setPosition(117.44917791230931, 31.87409363277426, 2000);
-    //   switch (item.type) {
-    //     case 1:
-    //       if (item.checked) {
-    //         this.kkxjLayer = this.createLayer(item, "icon-sp-point");
-    //       } else {
-    //         this.kkxjLayer.clear();
-    //       }
-    //       break;
-    //     case 2:
-    //       if (item.checked) {
-    //         this.gdxjLayer = this.createLayer(item, "icon-gklw");
-    //       } else {
-    //         this.gdxjLayer.clear();
-    //       }
-    //       break;
-
-    //     default:
-    //       break;
-    //   }
-    // },
-    // onCheckSPJKType(item) {
-    //   sgworld.Navigate.setPosition(117.44917791230931, 31.87409363277426, 2000);
-    //   switch (item.type) {
-    //     case 1:
-    //       if (item.checked) {
-    //         this.rlkkLayer = this.createLayer(item, "icon-rlxj");
-    //       } else {
-    //         this.rlkkLayer.clear();
-    //       }
-    //       break;
-    //     case 2:
-    //       if (item.checked) {
-    //         this.clkkLayer = this.createLayer(item, "icon-clkk");
-    //       } else {
-    //         this.clkkLayer.clear();
-    //       }
-    //       break;
-    //     case 3:
-    //       if (item.checked) {
-    //         this.qjjkLayer = this.createLayer(item, "icon-qjjk");
-    //       } else {
-    //         this.qjjkLayer.clear();
-    //       }
-    //       break;
-    //     case 4:
-    //       if (item.checked) {
-    //         this.gklwLayer = this.createLayer(item, "icon-gklw");
-    //       } else {
-    //         this.gklwLayer.clear();
-    //       }
-    //       break;
-
-    //     default:
-    //       break;
-    //   }
-    // },
-    // createLayer(item, image) {
-    //   let layer = new SmartEarth.ClusterLayer(Viewer, {
-    //     style: "clustering",
-    //   });
-    //   layer.enableCluster = false;
-    //   item.positions.forEach((ele) => {
-    //     layer.add(ele, {
-    //       image: SmartEarthRootUrl + `Workers/image/${image}.png`,
-    //       scale: 0.6,
-    //     });
-    //   });
-    //   return layer;
-    // },
-
-    //新增点标绘
-    addDBH() {
-      let dbhList = JSON.parse(localStorage.getItem("dbhList"));
-      sgworld.Creator.createSimpleGraphic("billboard", {}, (entity) => {
-        console.log(sgworld.Creator.SimpleGraphic.getStyle(entity));
-        let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-        let degrees = SmartEarth.Cartesian3_to_WGS84(obj.position);
-        let coordinates = [];
-        let dic = {
-          lon: degrees.lon,
-          lat: degrees.lat,
-        };
-        coordinates.push(dic);
-        this.$set(obj, "idx", -1);
-        this.$set(obj, "coordinates", coordinates);
-        dbhList.push(obj);
-        localStorage.setItem("dbhList", JSON.stringify(dbhList));
-        bus.$emit("yabhTabIndex", 1);
-      });
-    },
-    selectPoint(idx) {
-      let dbhList = JSON.parse(localStorage.getItem("dbhList"));
-      sgworld.Creator.createSimpleGraphic(
-        "billboard",
-        {
-          image:
-            SmartEarthRootUrl +
-            `Workers/image/${idx === 0 ? "icon-start" : "icon-end"}.png`,
-          scale: 0.85,
-        },
-        (entity) => {
-          console.log(sgworld.Creator.SimpleGraphic.getStyle(entity));
-          let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-          let degrees = SmartEarth.Cartesian3_to_WGS84(obj.position);
-          if (idx === 0) {
-            this.$refs.left.startLonLat = degrees.lon + "," + degrees.lat;
-          } else {
-            this.$refs.left.endLonLat = degrees.lon + "," + degrees.lat;
-          }
-          let coordinates = [];
-          let dic = {
-            lon: degrees.lon,
-            lat: degrees.lat,
-          };
-          coordinates.push(dic);
-          this.$set(obj, "idx", idx);
-          this.$set(obj, "coordinates", coordinates);
-          let index = dbhList.findIndex((item) => item.idx === obj.idx);
-          // 如果有就替换，没有就添加
-          if (index !== -1) {
-            let item = dbhList[index];
-            Viewer.entities.removeById(item.id);
-            dbhList.splice(index, 1, obj);
-          } else {
-            dbhList.push(obj);
-          }
-          localStorage.setItem("dbhList", JSON.stringify(dbhList));
-          bus.$emit("yabhTabIndex", 1);
-        }
-      );
-    },
-    //新增线标绘
-    addXBH() {
-      let xbhList = JSON.parse(localStorage.getItem("xbhList"));
-      sgworld.Creator.createSimpleGraphic("polyline", {}, (entity) => {
-        console.log(sgworld.Creator.SimpleGraphic.getStyle(entity));
-        let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-        let coordinates = [];
-        obj.positions.forEach((item) => {
-          let degrees = SmartEarth.Cartesian3_to_WGS84(item);
-          let dic = {
-            lon: degrees.lon,
-            lat: degrees.lat,
-          };
-          coordinates.push(dic);
-        });
-        this.$set(obj, "coordinates", coordinates);
-        xbhList.push(obj);
-        localStorage.setItem("xbhList", JSON.stringify(xbhList));
-        bus.$emit("yabhTabIndex", 2);
-      });
-    },
-    //新增面标绘
-    addMBH(idx) {
-      let mbhList = JSON.parse(localStorage.getItem("mbhList"));
-      switch (idx) {
-        case 1:
-          // sgworld.Creator.createSimpleGraphic("rectangle", {}, (entity) => {
-          //   console.log(sgworld.Creator.SimpleGraphic.getStyle(entity));
-          //   let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-          //   let coordinates = this.eswn_to_wgs84(obj.coordinates);
-          //   this.$set(obj, "coordinates", coordinates);
-          //   mbhList.push(obj);
-          //   localStorage.setItem("mbhList", JSON.stringify(mbhList));
-          //   bus.$emit("yabhTabIndex", 3);
-          // });
-          break;
-        case 2:
-          sgworld.Creator.createSimpleGraphic("circle", {}, (entity) => {
-            console.log(sgworld.Creator.SimpleGraphic.getStyle(entity));
-            let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-            let degrees = SmartEarth.Cartesian3_to_WGS84(obj.position);
-            let coordinates = [];
-            let dic = {
-              lon: degrees.lon,
-              lat: degrees.lat,
-            };
-            coordinates.push(dic);
-            this.$set(obj, "coordinates", coordinates);
-            mbhList.push(obj);
-            localStorage.setItem("mbhList", JSON.stringify(mbhList));
-            bus.$emit("yabhTabIndex", 3);
-          });
-          break;
-        case 3:
-          sgworld.Creator.createSimpleGraphic("polygon", {}, (entity) => {
-            console.log(sgworld.Creator.SimpleGraphic.getStyle(entity));
-            let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-            let coordinates = [];
-            obj.positions.forEach((item) => {
-              let degrees = SmartEarth.Cartesian3_to_WGS84(item);
-              let dic = {
-                lon: degrees.lon,
-                lat: degrees.lat,
-              };
-              coordinates.push(dic);
-            });
-            this.$set(obj, "coordinates", coordinates);
-            mbhList.push(obj);
-            localStorage.setItem("mbhList", JSON.stringify(mbhList));
-            bus.$emit("yabhTabIndex", 3);
-          });
-          break;
-
-        default:
-          break;
-      }
-    },
-    //新增体标绘
-    addTBH() {
-      let tbhList = JSON.parse(localStorage.getItem("tbhList"));
-      sgworld.Creator.createSimpleGraphic("box", {}, (entity) => {
-        console.log(sgworld.Creator.SimpleGraphic.getStyle(entity));
-        let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-        let degrees = SmartEarth.Cartesian3_to_WGS84(obj.position);
-        let coordinates = [];
-        let dic = {
-          lon: degrees.lon,
-          lat: degrees.lat,
-        };
-        coordinates.push(dic);
-        this.$set(obj, "coordinates", coordinates);
-        tbhList.push(obj);
-        localStorage.setItem("tbhList", JSON.stringify(tbhList));
-        bus.$emit("yabhTabIndex", 4);
-      });
-    },
-    //新增警用标绘
-    addJYBH(idx) {
-      let jybhList = JSON.parse(localStorage.getItem("jybhList"));
-      let imageName = this.getJYBHIcon(idx);
-      sgworld.Creator.createSimpleGraphic(
-        "billboard",
-        {
-          image: SmartEarthRootUrl + `Workers/image/${imageName}.png`,
-          scale: 0.7,
-        },
-        (entity) => {
-          console.log(sgworld.Creator.SimpleGraphic.getStyle(entity));
-          let obj = sgworld.Creator.SimpleGraphic.getStyle(entity);
-          let degrees = SmartEarth.Cartesian3_to_WGS84(obj.position);
-          let coordinates = [];
-          let dic = {
-            lon: degrees.lon,
-            lat: degrees.lat,
-          };
-          coordinates.push(dic);
-          this.$set(obj, "typeIndex", idx);
-          this.$set(obj, "coordinates", coordinates);
-          jybhList.push(obj);
-          localStorage.setItem("jybhList", JSON.stringify(jybhList));
-          bus.$emit("yabhTabIndex", 5);
-        }
-      );
-    },
-    getJYBHIcon(idx) {
-      switch (idx) {
-        case 1:
-          return "icon-sp-point";
-          break;
-        case 2:
-          return "icon-gklw";
-          break;
-        case 3:
-          return "icon-jjbn";
-          break;
-        case 4:
-          return "icon-jqr";
-          break;
-        case 5:
-          return "icon-mj";
-          break;
-        case 6:
-          return "icon-fj";
-          break;
-        case 7:
-          return "icon-jc";
-          break;
-        case 8:
-          return "icon-ptu";
-          break;
-        case 9:
-          return "icon-wrj";
-          break;
-
-        default:
-          break;
-      }
-    },
-    //新增线路漫游
-    addXLMY() {
-      let xlmyList = JSON.parse(localStorage.getItem("xlmyList"));
-      sgworld.Command.execute(2, 3, "", (data) => {
-        // console.log(data);
-        xlmyList.push(data);
-        localStorage.setItem("xlmyList", JSON.stringify(xlmyList));
-        bus.$emit("cjxxTabIndex", 1);
-
-        data.showPoint = false;
-        data.showLine = true;
-        data.height = 60;
-        data.mode = 1;
-        window.PathAnimationData = {
-          flyData: data,
-        };
-        window.PathAnimationData.winIndex = layer.open({
-          type: 2,
-          title: "路径动画",
-          shade: false,
-          area: ["352px", "690px"],
-          offset: "r",
-          skin: "other-class",
-          content: SmartEarthRootUrl + "Workers/path/Path.html",
-          end: function () {
-            PathAnimationData.fly && PathAnimationData.fly.exit();
-          },
-        });
-      });
-    },
-    //新增定点绕飞
-    addDDRF() {
-      let allowClick = true;
-      sgworld.Analysis.setPointFly();
-      let ddrfList = JSON.parse(localStorage.getItem("ddrfList"));
-      let handler = new Cesium.ScreenSpaceEventHandler(Viewer.scene.canvas);
-      handler.setInputAction((event) => {
-        if (allowClick) {
-          allowClick = false;
-          let p = sgworld.Navigate.getMouseDegrees(event);
-          ddrfList.push(p);
-          localStorage.setItem("ddrfList", JSON.stringify(ddrfList));
-          bus.$emit("cjxxTabIndex", 2);
-          console.log(p);
-        }
-      }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-    },
-    //新增视角锁定
-    addSJSD() { },
-    //四至坐标转化成经纬度
-    eswn_to_wgs84(coor) {
-      const northwest = Cesium.Rectangle.northwest(coor);
-      const southwest = Cesium.Rectangle.southwest(coor);
-      const northeast = Cesium.Rectangle.northeast(coor);
-      const southeast = Cesium.Rectangle.southeast(coor);
-      const leftTop = {
-        lon: Cesium.Math.toDegrees(northwest.longitude),
-        lat: Cesium.Math.toDegrees(northwest.latitude),
-      };
-      const leftBottom = {
-        lon: Cesium.Math.toDegrees(southwest.longitude),
-        lat: Cesium.Math.toDegrees(southwest.latitude),
-      };
-      const rightTop = {
-        lon: Cesium.Math.toDegrees(northeast.longitude),
-        lat: Cesium.Math.toDegrees(northeast.latitude),
-      };
-      const rightBottom = {
-        lon: Cesium.Math.toDegrees(southeast.longitude),
-        lat: Cesium.Math.toDegrees(southeast.latitude),
-      };
-      return [leftTop, leftBottom, rightTop, rightBottom];
-    },
   },
 };
 </script>
-    
-<style lang="scss" scoped>
-.cp {
-  cursor: pointer;
-}
 
+<style lang="scss" scoped>
 .full-box {
   width: 100%;
   height: 100%;
   position: relative;
-}
-
-.flex-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.row-center {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-sb {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.cp {
-  cursor: pointer;
 }
 
 .top-bg {
