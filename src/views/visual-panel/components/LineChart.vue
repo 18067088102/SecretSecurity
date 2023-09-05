@@ -2,7 +2,7 @@
   <div ref="chart" :class="className" :style="{ height: height, width: width }" />
 </template>
   
-  <script>
+<script>
 import * as echarts from "echarts";
 require("echarts/theme/macarons"); // echarts theme
 import resize from "./mixins/resize";
@@ -111,9 +111,7 @@ export default {
             },
             axisLabel: {
               show: true,
-              textStyle: {
-                color: "#aad8ff",
-              },
+              color: "#aad8ff",
               interval: 0,
               rotate: 20,
             },
@@ -150,9 +148,7 @@ export default {
             },
             axisLabel: {
               show: true,
-              textStyle: {
-                color: "#aad8ff",
-              },
+              color: "#aad8ff",
             },
             axisTick: {
               show: false,
@@ -166,26 +162,22 @@ export default {
             symbol: "circle",
             smooth: true,
             lineStyle: {
-              normal: {
-                width: 1,
-                color: "#00ffa2", // 线条颜色
-              },
+              width: 1,
+              color: "#00ffa2", // 线条颜色
             },
             showSymbol: false,
             itemStyle: {
-              normal: {
-                color: "#00f0ff", //拐点颜色
-                label: {
-                  show: true, //开启显示
-                  color: "#fff",
-                  position: "top", //在上方显示
-                  formatter: function (res) {
-                    if (res.value) {
-                      return res.value;
-                    } else {
-                      return 0;
-                    }
-                  },
+              color: "#00f0ff", //拐点颜色
+              label: {
+                show: true, //开启显示
+                color: "#fff",
+                position: "top", //在上方显示
+                formatter: function (res) {
+                  if (res.value) {
+                    return res.value;
+                  } else {
+                    return 0;
+                  }
                 },
               },
             },
@@ -219,10 +211,8 @@ export default {
             symbol: "circle", // 默认是空心圆（中间是白色的），改成实心圆
             smooth: true,
             lineStyle: {
-              normal: {
-                width: 1,
-                color: "#3D84F7", // 线条颜色
-              },
+              width: 1,
+              color: "#3D84F7", // 线条颜色
             },
             areaStyle: {
               color: {

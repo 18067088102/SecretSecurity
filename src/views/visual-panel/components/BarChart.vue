@@ -111,9 +111,7 @@ export default {
             },
             axisLabel: {
               show: true,
-              textStyle: {
-                color: "#aad8ff",
-              },
+              color: "#aad8ff",
               interval: 0,
               rotate: 15,
             },
@@ -139,9 +137,7 @@ export default {
             },
             axisLabel: {
               show: true,
-              textStyle: {
-                color: "#aad8ff",
-              },
+              color: "#aad8ff",
             },
           },
         ],
@@ -152,8 +148,7 @@ export default {
             barWidth: yArr.length < 6 ? "10%" : "20%",
             data: yArr,
             animationDuration: 2600,
-            itemStyle: {
-              color: {
+            color: {
                 type: "linear",
                 x: 0,
                 x2: 0,
@@ -164,7 +159,6 @@ export default {
                   { offset: 1, color: "#25D2F1" },
                 ],
               },
-            },
           },
           {
             name: "rightA",
@@ -172,8 +166,7 @@ export default {
             barWidth: yArr.length < 6 ? "10%" : "20%",
             data: yArr,
             animationDuration: 2600,
-            itemStyle: {
-              color: {
+            color: {
                 type: "linear",
                 x: 0,
                 x2: 0,
@@ -184,7 +177,6 @@ export default {
                   { offset: 1, color: "#0663e9" },
                 ],
               },
-            },
             barGap: 0,
           },
           {
@@ -194,9 +186,7 @@ export default {
             data: yArr,
             animationDuration: 2600,
             itemStyle: {
-              normal: {
-                color: "#00a8ff",
-              },
+              color: "#00a8ff",
             },
             symbol: "diamond",
             symbolRotate: 0,
