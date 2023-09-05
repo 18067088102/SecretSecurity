@@ -260,7 +260,7 @@ export default {
             }
         });
         bus.$on("updateCurrentYAInfo", (info) => {
-            this.currentYAInfo = info.currentYAInfo;
+            this.currentYAInfo = info;
             this.yabhTabIndex = 1;
             this.cjxxTabIndex = 1;
             if (this.currentYAInfo.plotInfo) {

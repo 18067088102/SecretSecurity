@@ -613,7 +613,6 @@ export default {
       openVideo: false, //实时视频弹框
       showYALX: false, //顶部预案类型四个按钮
       yalxSelectIndex: 1, //预案总览
-      currentYAType: "", //当前预案类型
 
       //poi信息面板
       poiTrees: [],
@@ -645,8 +644,6 @@ export default {
       polygon: null,
       box: null,
       billboard: null,
-
-      plotAsset: [],
 
       coordinates1: [
         { lon: 120.2021027552695, lat: 30.247919370059755 },
@@ -722,128 +719,6 @@ export default {
     });
     bus.$on("showFault", (data) => {
       this.onShowFault(data);
-    });
-    bus.$on("updateCurrentYAInfo", (info) => {
-      Viewer.entities.removeAll();
-      if (info.currentYAInfo.plotInfo) {
-        let arr = JSON.parse(info.currentYAInfo.plotInfo);
-        arr.forEach((item) => {
-          // console.log(item);
-          if (item.type === "1") {
-            item.list.forEach((ele) => {
-              let billboard = sgworld.Creator.createBillboard({
-                lon: ele.coordinates[0].lon,
-                lat: ele.coordinates[0].lat,
-                image: ele.image,
-                scale: 0.85,
-              });
-              sgworld.Navigate.flyToObj(billboard);
-            });
-          }
-          if (item.type === "2") {
-            item.list.forEach((i) => {
-              var geometry = [];
-              i.coordinates.forEach((ele) => {
-                let obj = {
-                  x: ele.lon,
-                  y: ele.lat,
-                  z: 0,
-                };
-                geometry.push(obj);
-              });
-              let line = sgworld.Creator.createPolyline(
-                geometry,
-                "#ffff00",
-                1,
-                0,
-                "线"
-              );
-              sgworld.Navigate.flyToObj(line);
-            });
-          }
-          if (item.type === "3") {
-            item.list.forEach((i) => {
-              if (i.type === "circle") {
-                let position = sgworld.Creator.CreatePosition(
-                  i.coordinates[0].lon,
-                  i.coordinates[0].lat,
-                  10,
-                  1,
-                  0,
-                  0,
-                  0,
-                  300
-                );
-                let circle = sgworld.Creator.CreateCircle(
-                  position,
-                  i.radius,
-                  "#00ff0050",
-                  "#ffff00",
-                  "",
-                  "圆"
-                );
-                sgworld.Navigate.flyToObj(circle);
-              } else if (i.type === "polygon") {
-                let coordinates = [];
-                i.coordinates.forEach((ele) => {
-                  let obj = {
-                    x: ele.lon,
-                    y: ele.lat,
-                  };
-                  coordinates.push(obj);
-                });
-                let polygon = sgworld.Creator.createPolygon(
-                  coordinates,
-                  {
-                    fillColor: "#00ff0050",
-                    outlineColor: "#ff0000",
-                    outlineWidth: 2,
-                  },
-                  1,
-                  0,
-                  "面"
-                );
-                sgworld.Navigate.flyToObj(polygon);
-              }
-            });
-          }
-          if (item.type === "4") {
-            item.list.forEach((i) => {
-              var position = sgworld.Creator.CreatePosition(
-                i.coordinates[0].lon,
-                i.coordinates[0].lat,
-                100,
-                1,
-                0,
-                0,
-                0,
-                300
-              );
-              let box = sgworld.Creator.CreateBox(
-                position,
-                i.dimensions.y,
-                i.dimensions.z,
-                i.dimensions.x,
-                "#ff0000",
-                "#ffff00",
-                0,
-                "长方体"
-              );
-            });
-          }
-          if (item.type === "5") {
-            item.list.forEach((i) => {
-              let imageName = this.getJYBHIcon(i.typeIndex);
-              let billboard = sgworld.Creator.createBillboard({
-                lon: i.coordinates[0].lon,
-                lat: i.coordinates[0].lat,
-                image: SmartEarthRootUrl + `Workers/image/${imageName}.png`,
-                scale: 0.7,
-              });
-            });
-          }
-        });
-      }
     });
     // 左侧工具按钮
     bus.$on("searchBuilding", (data) => {
