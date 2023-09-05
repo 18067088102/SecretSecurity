@@ -55,7 +55,11 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, "macarons");
+      this.chart = echarts.getInstanceByDom(this.$refs.chart);
+      //如果为空 则正常进行渲染 反之 不再进行初始化 
+      if (this.chart == null) {
+        this.chart = echarts.init(this.$el, "macarons");
+      }
 
       let xArr = [];
       let yArr = [];
