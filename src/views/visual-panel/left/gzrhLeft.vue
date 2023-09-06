@@ -119,7 +119,7 @@
                 ? (showChartsData.length * 400) / 6 + 'px'
                 : '400px',
         }">
-            <bar-chart :dataList="showChartsData" />
+            <bar-chart v-if="showChartsData.length !== 0" :dataList="showChartsData" />
         </div>
     </div>
 </template>
@@ -239,8 +239,10 @@ export default {
         background-size: 100% 100%;
         margin-left: 30px;
     }
+
     .sbgl-box {
         margin-top: 20px;
+
         .top-text {
             font-size: 14px;
             line-height: 14px;
@@ -249,6 +251,7 @@ export default {
             color: #e1e1e1;
             margin-bottom: 7px;
         }
+
         .count-text {
             margin-top: 4px;
             font-size: 22px;
@@ -257,33 +260,39 @@ export default {
             font-weight: 800;
             color: #ffffff;
         }
+
         .bg1 {
             background: linear-gradient(180deg, #ffffff 40%, #14acf3 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .bg2 {
             background: linear-gradient(180deg, #ffffff 40%, #fd9929 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .bg3 {
             background: linear-gradient(180deg, #ffffff 40%, #ff4e4f 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .sbsl-bg {
             width: 94px;
             height: 107px;
             background: url("../../../assets/images/gzrh/sbsl-bg.png");
             background-size: 100% 100%;
         }
+
         .sbyc-bg {
             width: 94px;
             height: 107px;
             background: url("../../../assets/images/gzrh/sbyc-bg.png");
             background-size: 100% 100%;
         }
+
         .sbyj-bg {
             width: 94px;
             height: 107px;
@@ -291,15 +300,18 @@ export default {
             background-size: 100% 100%;
         }
     }
+
     .yj-box {
         margin-top: 20px;
         margin-left: 30px;
+
         .yj-bg {
             width: 180px;
             height: 16px;
             background: url("../../../assets/images/gzrh/yj-bg.png");
             background-size: 100% 100%;
             padding-left: 12px;
+
             .head-text {
                 font-size: 16px;
                 line-height: 16px;
@@ -311,12 +323,14 @@ export default {
                 -webkit-text-fill-color: transparent;
             }
         }
+
         .point-box {
             width: 8px;
             height: 8px;
             background: #48ddfe;
             border-radius: 50%;
         }
+
         .title-text {
             line-height: 14px;
             font-size: 14px;
@@ -324,17 +338,20 @@ export default {
             font-weight: 400;
             color: #ffffff;
         }
+
         .all-progress {
             width: 364px;
             height: 8px;
             background: rgba(8, 40, 74, 0.5);
             border-radius: 4px;
+
             .ycl-progress {
                 width: 204px;
                 height: 8px;
                 background: linear-gradient(92deg, #48ddfe, #09a2f1);
                 border-radius: 4px;
             }
+
             .wcl-progress {
                 width: 160px;
                 height: 8px;
@@ -343,6 +360,7 @@ export default {
             }
         }
     }
+
     .gzsb-head {
         width: 405px;
         height: 37px;
@@ -351,6 +369,7 @@ export default {
         margin-top: 20px;
         margin-left: 30px;
     }
+
     .gzsb-box1 {
         width: 100%;
         padding: 15px 117px 0 30px;
@@ -359,9 +378,11 @@ export default {
         height: 260px;
         overflow: hidden;
         overflow-y: auto;
+
         &::-webkit-scrollbar {
             display: none;
         }
+
         .gzsb-item {
             display: flex;
             flex-direction: row;
@@ -370,15 +391,18 @@ export default {
             width: 153px;
             height: 63px;
             margin-bottom: 15px;
+
             &:nth-child(2n) {
                 margin-left: 45px;
             }
+
             .gzsb-bg {
                 width: 100px;
                 height: 16px;
                 background: url("../../../assets/images/gzrh/gzsb-bg.png");
                 background-size: 100% 100%;
                 padding-top: -8px;
+
                 .name-text {
                     font-size: 14px;
                     line-height: 14px;
@@ -390,6 +414,7 @@ export default {
                     -webkit-text-fill-color: transparent;
                 }
             }
+
             .count-text {
                 font-size: 18px;
                 line-height: 18px;
@@ -400,6 +425,7 @@ export default {
             }
         }
     }
+
     .sbgjtj-text {
         font-size: 16px;
         line-height: 16px;
@@ -407,6 +433,7 @@ export default {
         font-weight: 400;
         color: #fff;
     }
+
     .detail-text {
         line-height: 14px;
         font-size: 14px;
@@ -414,6 +441,7 @@ export default {
         font-weight: 400;
         color: #a0d8ff;
     }
+
     .warning-count {
         margin-top: 10px;
         margin-left: 30px;

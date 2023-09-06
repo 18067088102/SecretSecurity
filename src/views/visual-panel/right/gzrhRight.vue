@@ -2,7 +2,10 @@
     <div class="gzrh flex-end">
         <!-- 设备实时告警 -->
         <div class="sbssgj-head"></div>
-        <div class="sbssgj-table flex-column">
+        <div class="sbssgj-table row-center" style="width: 371px; height: 219px" v-if="ssgjs.length === 0">
+            <img style="width: 118px; height: 165px" src="../../../assets/images/panel/icon-empty.png" alt="" />
+        </div>
+        <div class="sbssgj-table flex-column" v-else>
             <div class="table-head table-text flex-row">
                 <span style="margin-left: 62px; width: 97px">设备类型</span>
                 <span style="width: 165px">告警时间</span>
@@ -38,7 +41,10 @@
         </div>
         <!-- 设备异常状态监测 -->
         <div class="sblx-head"></div>
-        <div class="sblx-table flex-column">
+        <div class="sblx-table row-center" style="width: 371px; height: 219px" v-if="sbycs.length === 0">
+            <img style="width: 118px; height: 165px" src="../../../assets/images/panel/icon-empty.png" alt="" />
+        </div>
+        <div class="sblx-table flex-column" v-else>
             <div class="table-head table-text flex-row">
                 <span style="margin-left: 62px; width: 97px">设备类型</span>
                 <span style="width: 165px">异常内容</span>
@@ -103,7 +109,7 @@
         <div class="chart-box" :style="{
             width: showCharts ? (showChartsData.length * 425) / 6 + 'px' : '425px',
         }">
-            <line-chart :chartData="showChartsData" />
+            <line-chart v-if="showChartsData.length !== 0" :chartData="showChartsData" />
         </div>
     </div>
 </template>
@@ -207,18 +213,18 @@ export default {
 
 <style lang="scss" scoped>
 .flex-column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .max-w {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    cursor: pointer;
 }
 
 .gzrh {

@@ -1,10 +1,7 @@
 <template>
   <div>
     <div class="left-bg-retract">
-      <div
-        :class="showLeftPanel ? 'left-retract' : 'right-retract'"
-        @click="handelLeftPanel"
-      ></div>
+      <div :class="showLeftPanel ? 'left-retract' : 'right-retract'" @click="handelLeftPanel"></div>
     </div>
     <div class="left-bg" v-show="showLeftPanel">
       <div class="left-top-box">
@@ -18,11 +15,7 @@
             }}</span>
           </div>
         </div>
-        <img
-          class="weather-img"
-          src="../../assets/images/panel/icon-weather.png"
-          alt=""
-        />
+        <img class="weather-img" src="../../assets/images/panel/icon-weather.png" alt="" />
       </div>
       <!-- 感知融合 -->
       <gzrh-left v-if="currentIndex === 1"></gzrh-left>
@@ -85,6 +78,7 @@ export default {
   height: 610px;
   background: url("../../assets/images/panel/left-bg-retract.png");
   z-index: 999;
+
   .right-retract {
     position: absolute;
     top: 50%;
@@ -95,6 +89,7 @@ export default {
     background: url("../../assets/images/panel/right-retract.png");
     cursor: pointer;
   }
+
   .left-retract {
     position: absolute;
     top: 50%;
@@ -106,6 +101,7 @@ export default {
     cursor: pointer;
   }
 }
+
 .left-bg {
   position: absolute;
   top: 0;
@@ -115,11 +111,13 @@ export default {
   background: url("../../assets/images/panel/left-bg.png");
   background-size: 100% 100%;
   z-index: 99;
+
   .left-top-box {
     display: flex;
     flex-direction: row;
     width: 514px;
     height: 96px;
+
     .weather-img {
       width: 134px;
       height: 24px;
@@ -127,6 +125,7 @@ export default {
       top: 33px;
       left: 386px;
     }
+
     .date-box {
       display: flex;
       flex-direction: row;
@@ -134,6 +133,7 @@ export default {
       position: absolute;
       top: 24px;
       left: 157px;
+
       .time-text {
         font-size: 22px;
         line-height: 22px;
@@ -141,6 +141,7 @@ export default {
         font-weight: 800;
         color: #eff9ff;
       }
+
       .line-text {
         width: 1px;
         height: 20px;
@@ -149,6 +150,7 @@ export default {
         color: #53d5fd;
         margin: 0 15px 0 10px;
       }
+
       .heiti-text {
         font-size: 10px;
         line-height: 10px;
